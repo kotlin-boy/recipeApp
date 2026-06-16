@@ -15,26 +15,46 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
-enum class Screen {
-    HOME,
-    ADD_RECIPE
-}
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavController
 
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
-            HomeScreen()
+
+            val navController = rememberNavController()
+
+            NavHost(
+                navController = navController,
+                startDestination = Screen.HOME.route
+            ) {
+
+                composable(
+                    route = Screen.HOME.route
+                ) {
+                    HomeScreen(
+                        navController = navController
+                    )
+                }
+
+                composable(
+                    route = Screen.ADD_RECIPE.route
+                ) {
+                    AddRecipeScreen()
+                }
+            }
         }
     }
 }
 
 @Composable
-fun HomeScreen() {
-
+fun HomeScreen(
+    navController: NavController
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -52,10 +72,16 @@ fun HomeScreen() {
         )
 
         Button(
-            onClick = { }
+            onClick = {
+                navController.navigate(
+                    Screen.ADD_RECIPE.route
+                )
+            },
+            modifier = Modifier.padding(top = 16.dp)
         ) {
-            Text("レシピ追加")
+            Text("レシピ閲覧")
         }
+
 
         Button(
             onClick = { },
