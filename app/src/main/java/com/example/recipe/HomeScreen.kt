@@ -51,7 +51,9 @@ fun HomeScreen(
 
         Button(
             onClick = {
-                // 後でレシピ閲覧画面へ遷移
+                navController.navigate(
+                    Screen.RECIPE_LIST.route
+                )
             },
             modifier = Modifier.padding(top = 16.dp)
         ) {

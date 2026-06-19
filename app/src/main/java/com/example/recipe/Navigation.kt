@@ -30,5 +30,26 @@ fun AppNavigation() {
                 navController = navController
             )
         }
+
+        composable(
+            route = Screen.RECIPE_LIST.route
+        ) {
+            RecipeViewScreen(
+                navController = navController
+            )
+        }
+
+        composable(
+            route = "recipe_detail/{recipeId}"
+        ) { backStackEntry ->
+
+            val recipeId =
+                backStackEntry.arguments?.getInt("recipeId")
+                    ?: 0
+
+            RecipeDetailScreen(
+                recipeId = recipeId
+            )
+        }
     }
 }

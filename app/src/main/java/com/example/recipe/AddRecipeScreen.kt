@@ -194,7 +194,7 @@ fun AddRecipeScreen(
         }
 
 
-        //メモ
+        //メモゾーン
         OutlinedTextField(
             value = memo,
             onValueChange = {
@@ -208,9 +208,17 @@ fun AddRecipeScreen(
 
         Button(
             onClick = {
-                println(recipeName)
-            },
-            modifier = Modifier.padding(top = 16.dp)
+
+                val recipe = Recipe(
+                    name = recipeName,
+                    genre = selectedGenre,
+                    ingredients = ingredients.toList(),
+                    steps = steps.toList(),
+                    memo = memo
+                )
+
+                println(recipe)
+            }
         ) {
             Text("保存")
         }
