@@ -11,31 +11,39 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.setValue
 
 @Composable
 fun RecipeViewScreen(
     navController: NavController
 ) {
+    //アプリの現在状態
+    val context = LocalContext.current
+    //DBの作成(状態保持、createはstatic関数)
+    val database = remember {
+        RecipeDatabase.create(context)
+    }
+    //データ操作セット
+    val recipeDao = database.recipeDao()
 
-    val recipes = listOf(
-        Recipe(
-            id = 1,
-            name = "親子丼",
-            genre = RecipeGenre.MAIN,
-            ingredients = emptyList(),
-            steps = emptyList(),
-            memo = ""
-        ),
-        Recipe(
-            id = 2,
-            name = "ポテトサラダ",
-            genre = RecipeGenre.SALAD,
-            ingredients = emptyList(),
-            steps = emptyList(),
-            memo = ""
+    //データ保持用リスト
+    var recipes by remember {
+        mutableStateOf<List<Recipe>>(
+            emptyList()
         )
-    )
+    }
+
+    //画面表示時に全件レシピ取得
+    LaunchedEffect(Unit) {
+        recipes = recipeDao.getAll()
+    }
 
     Column(
         modifier = Modifier

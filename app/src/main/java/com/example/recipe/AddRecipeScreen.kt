@@ -19,6 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalContext
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -59,6 +62,18 @@ fun AddRecipeScreen(
         mutableStateListOf("")
     }
 
+    //非同期処理用
+    val scope = rememberCoroutineScope()
+
+    //現在のアプリ状態の保持
+    val context = LocalContext.current
+
+    //データベースの作成(static関数使用)
+    val database = remember {
+        RecipeDatabase.create(context)
+    }
+
+    val recipeDao = database.recipeDao()
 
 ////////////////////////UIゾーン////////////////////////
 
@@ -210,6 +225,7 @@ fun AddRecipeScreen(
             onClick = {
 
                 val recipe = Recipe(
+                    id = 0,
                     name = recipeName,
                     genre = selectedGenre,
                     ingredients = ingredients.toList(),
@@ -217,7 +233,20 @@ fun AddRecipeScreen(
                     memo = memo
                 )
 
-                println(recipe)
+                scope.launch {
+
+                    try {
+
+                        recipeDao.insert(recipe)
+                        println("保存成功")
+                        navController.popBackStack()
+
+                    } catch (e: Exception) {
+
+                        println("保存失敗")
+
+                    }
+                }
             }
         ) {
             Text("保存")
