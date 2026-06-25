@@ -44,10 +44,13 @@ fun AppNavigation() {
         ) { backStackEntry ->
 
             val recipeId =
-                backStackEntry.arguments?.getInt("recipeId")
+                backStackEntry.arguments
+                    ?.getString("recipeId")
+                    ?.toIntOrNull()
                     ?: 0
 
             RecipeDetailScreen(
+                navController = navController,
                 recipeId = recipeId
             )
         }

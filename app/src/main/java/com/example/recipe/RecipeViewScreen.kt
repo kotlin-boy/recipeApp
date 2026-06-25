@@ -43,6 +43,7 @@ fun RecipeViewScreen(
     //画面表示時に全件レシピ取得
     LaunchedEffect(Unit) {
         recipes = recipeDao.getAll()
+        println(recipes)
     }
 
     Column(
@@ -59,6 +60,7 @@ fun RecipeViewScreen(
 
                 Card(
                     onClick = {
+                        println("送るID = ${recipe.id}")
                         navController.navigate(
                             "recipe_detail/${recipe.id}"
                         )
