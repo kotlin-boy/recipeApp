@@ -54,5 +54,21 @@ fun AppNavigation() {
                 recipeId = recipeId
             )
         }
+
+        composable(
+            route = "edit_recipe/{recipeId}"
+        ) { backStackEntry ->
+
+            val recipeId =
+                backStackEntry.arguments
+                    ?.getString("recipeId")
+                    ?.toIntOrNull()
+                    ?: 0
+
+            EditRecipeScreen(
+                navController = navController,
+                recipeId = recipeId
+            )
+        }
     }
 }

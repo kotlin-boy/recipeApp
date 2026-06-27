@@ -1,6 +1,7 @@
 package com.example.recipe
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
@@ -83,16 +84,30 @@ fun RecipeDetailScreen(
                 text = recipe!!.memo
             )
 
-            Button(
-                onClick = {
-                    //削除処理が終わってから前画面へ
-                    scope.launch {
-                        recipeDao.delete(recipe!!)
-                        navController.popBackStack()
+            Row {
+
+                Button(
+                    onClick = {
+                        //編集画面へ
+                        navController.navigate(
+                            "edit_recipe/${recipe!!.id}"
+                        )
                     }
+                ) {
+                    Text("編集")
                 }
-            ) {
-                Text("削除")
+
+                Button(
+                    onClick = {
+                        //削除処理が終わってから前画面へ
+                        scope.launch {
+                            recipeDao.delete(recipe!!)
+                            navController.popBackStack()
+                        }
+                    }
+                ) {
+                    Text("削除")
+                }
             }
 
         } else {

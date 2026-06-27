@@ -6,5 +6,6 @@ enum class Screen(
     HOME("home"),
     ADD_RECIPE("add_recipe"),
     RECIPE_LIST("recipe_list"),
-    RECIPE_DETAIL("recipe_detail/{recipeId}")
+    RECIPE_DETAIL("recipe_detail/{recipeId}"),
+    EDIT_RECIPE("edit_recipe")
 }
