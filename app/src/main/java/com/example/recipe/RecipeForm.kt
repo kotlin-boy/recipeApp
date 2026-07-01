@@ -3,6 +3,7 @@ package com.example.recipe
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
@@ -28,6 +29,16 @@ fun RecipeForm(
     onDismissRequest: () -> Unit,
     selectedGenre: RecipeGenre,
     onGenreSelected: (RecipeGenre) -> Unit,
+    memo: String,
+    onMemoValueChange: (String) -> Unit,
+    ingredients: List<String>,
+    onIngredientValueChange: (Int, String) -> Unit,
+    onRemoveIngredient: (Int) -> Unit,
+    onAddIngredient: () -> Unit,
+    steps: List<String>,
+    onStepValueChange: (Int, String) -> Unit,
+    onRemoveStep: (Int) -> Unit,
+    onAddStep: () -> Unit
 ){
     OutlinedTextField(
         value = recipeName,
@@ -63,4 +74,82 @@ fun RecipeForm(
             }
         }
     }
+
+    //材料の記載・追加
+    Text("材料")
+    ingredients.forEachIndexed { index, ingredient ->
+        Row {
+            //材料欄
+            OutlinedTextField(
+                value = ingredient,
+                onValueChange = {
+                    onIngredientValueChange(index, it)
+                },
+                label = {
+                    Text("材料${index + 1}")
+                }
+            )
+            //削除ボタン
+            Button(
+                onClick = {
+                    onRemoveIngredient(index)
+                }
+            ) {
+                Text("×")
+            }
+        }
+    }
+
+    //材料リストの追加
+    Button(
+        onClick = {
+            onAddIngredient()
+        }
+    ) {
+        Text("＋")
+    }
+
+    //手順の記載・追加
+    steps.forEachIndexed { index, step ->
+
+        Row {
+            //手順欄
+            OutlinedTextField(
+                value = step,
+                onValueChange = {
+                    onStepValueChange(index, it)
+                },
+                label = {
+                    Text("手順${index + 1}")
+                }
+            )
+            //削除ボタン
+            Button(
+                onClick = {
+                    onRemoveStep(index)
+                }
+            ) {
+                Text("×")
+            }
+        }
+    }
+
+    //追加ボタン
+    Button(
+        onClick = {
+            onAddStep()
+        }
+    ) {
+        Text("＋")
+    }
+
+    //メモゾーン
+    OutlinedTextField(
+        value = memo,
+        onValueChange = onMemoValueChange,
+        label = {
+            Text("メモ")
+        },
+        minLines = 5
+    )
 }

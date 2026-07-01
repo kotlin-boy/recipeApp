@@ -82,7 +82,6 @@ fun AddRecipeScreen(
             .fillMaxSize()
             .safeDrawingPadding()
             .padding(16.dp)
-            .padding(16.dp)
             .verticalScroll(
                 rememberScrollState()
             )
@@ -93,11 +92,15 @@ fun AddRecipeScreen(
 
         Text("レシピ追加")
 
+        //レシピ用コンポーズ
         RecipeForm(
+            //レシピ名の状態変数とイベント関数を渡す
             recipeName = recipeName,
             onRecipeNameChange = {
                 recipeName = it
             },
+
+            //ジャンルドロップダウンの状態変数とイベント関数を渡す
             expanded = expanded,
             onExpandClick = {expanded = true},
             onDismissRequest = {expanded = false},
@@ -105,7 +108,82 @@ fun AddRecipeScreen(
             onGenreSelected = { genre ->
                 selectedGenre = genre
                 expanded = false
-            }
+            },
+
+            //材料の状態リストとイベント関数を渡す
+            ingredients = ingredients,
+            onIngredientValueChange = { index, value ->
+                ingredients[index] = value
+            },
+            onRemoveIngredient = { index ->
+                if (ingredients.size > 1) {
+                    ingredients.removeAt(index)
+                }
+            },
+            onAddIngredient = {
+                ingredients.add("")
+            },
+            onAddStep = {
+                steps.add("")
+            },
+
+            //手順の状態リストとイベント関数を渡す
+            steps = steps,
+            onStepValueChange = { index, value ->
+                steps[index] = value
+            },
+            onRemoveStep = { index ->
+                if (steps.size > 1)
+                    steps.removeAt(index)
+            },
+
+            //メモの状態変数とイベント関数を渡す
+            memo = memo,
+            onMemoValueChange = {
+                memo = it
+            },
         )
+
+        //保存処理
+        Row{
+            Button(
+                onClick = {
+
+                    val recipe = Recipe(
+                        id = 0,
+                        name = recipeName,
+                        genre = selectedGenre,
+                        ingredients = ingredients.toList(),
+                        steps = steps.toList(),
+                        memo = memo
+                    )
+
+                    scope.launch {
+
+                        try {
+
+                            recipeDao.insert(recipe)
+                            println("保存成功")
+                            navController.popBackStack()
+
+                        } catch (e: Exception) {
+
+                            println("保存失敗")
+
+                        }
+                    }
+                }
+            ) {
+                Text("保存")
+            }
+
+            Button(
+                onClick = {
+                    navController.popBackStack()
+                }
+            ) {
+                Text("戻る")
+            }
+        }
     }
 }
