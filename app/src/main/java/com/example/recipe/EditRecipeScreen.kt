@@ -100,7 +100,6 @@ fun EditRecipeScreen(
             .fillMaxSize()
             .safeDrawingPadding()
             .padding(16.dp)
-            .padding(16.dp)
             .verticalScroll(
                 rememberScrollState()
             )
@@ -109,173 +108,100 @@ fun EditRecipeScreen(
             }
     ) {
 
-        //レシピ名の記入
-        Text("レシピ追加")
-        OutlinedTextField(
-            value = recipeName,
-            onValueChange = {
+
+        Text("レシピ編集")
+
+        //レシピ用コンポーズ
+        RecipeForm(
+            //レシピ名の状態変数とイベント関数を渡す
+            recipeName = recipeName,
+            onRecipeNameChange = {
                 recipeName = it
             },
-            label = {
-                Text("レシピ名")
-            }
-        )
 
-        //ジャンル指定
-        Box {
-            Button(
-                onClick = {
-                    expanded = true
-                }
-            ) {
-                Text(selectedGenre.displayName)
-            }
-            //ドロップダウンの用意
-            DropdownMenu(
-                expanded = expanded,
-                //フォーカス切れると閉じる
-                onDismissRequest = {
-                    expanded = false
-                }
-            ) {
-                RecipeGenre.entries.forEach { genre ->
-                    //ドロップダウンメニューの項目
-                    DropdownMenuItem(
-                        text = {
-                            Text(genre.displayName)
-                        },
-                        onClick = {
-                            selectedGenre = genre
-                            //項目選択で閉じる
-                            expanded = false
-                        }
-                    )
-                }
-            }
-        }
+            //ジャンルドロップダウンの状態変数とイベント関数を渡す
+            expanded = expanded,
+            onExpandClick = {expanded = true},
+            onDismissRequest = {expanded = false},
+            selectedGenre = selectedGenre,
+            onGenreSelected = { genre ->
+                selectedGenre = genre
+                expanded = false
+            },
 
-        //材料の記載・追加
-        Text("材料")
-        ingredients.forEachIndexed { index, ingredient ->
-            Row {
-                //材料欄
-                OutlinedTextField(
-                    value = ingredient,
-                    onValueChange = {
-                        ingredients[index] = it
-                    },
-                    label = {
-                        Text("材料${index + 1}")
-                    }
-                )
-                //削除ボタン
-                Button(
-                    onClick = {
-                        if (ingredients.size > 1) {
-                            ingredients.removeAt(index)
-                        }
-                    }
-                ) {
-                    Text("×")
+            //材料の状態リストとイベント関数を渡す
+            ingredients = ingredients,
+            onIngredientValueChange = { index, value ->
+                ingredients[index] = value
+            },
+            onRemoveIngredient = { index ->
+                if (ingredients.size > 1) {
+                    ingredients.removeAt(index)
                 }
-            }
-        }
-
-        //材料リストの追加
-        Button(
-            onClick = {
+            },
+            onAddIngredient = {
                 ingredients.add("")
-            }
-        ) {
-            Text("＋")
-        }
-
-        //手順の記載・追加
-        steps.forEachIndexed { index, step ->
-
-            Row {
-                //手順欄
-                OutlinedTextField(
-                    value = step,
-                    onValueChange = {
-                        steps[index] = it
-                    },
-                    label = {
-                        Text("手順${index + 1}")
-                    }
-                )
-                //削除ボタン
-                Button(
-                    onClick = {
-                        if (steps.size > 1) {
-                            steps.removeAt(index)
-                        }
-                    }
-                ) {
-                    Text("×")
-                }
-            }
-        }
-
-        //追加ボタン
-        Button(
-            onClick = {
+            },
+            onAddStep = {
                 steps.add("")
-            }
-        ) {
-            Text("＋")
-        }
+            },
 
+            //手順の状態リストとイベント関数を渡す
+            steps = steps,
+            onStepValueChange = { index, value ->
+                steps[index] = value
+            },
+            onRemoveStep = { index ->
+                if (steps.size > 1)
+                    steps.removeAt(index)
+            },
 
-        //メモゾーン
-        OutlinedTextField(
-            value = memo,
-            onValueChange = {
+            //メモの状態変数とイベント関数を渡す
+            memo = memo,
+            onMemoValueChange = {
                 memo = it
             },
-            label = {
-                Text("メモ")
-            },
-            minLines = 5
         )
 
-        Button(
-            onClick = {
+        Row {
+            Button(
+                onClick = {
 
-                val recipe = Recipe(
-                    id = originalRecipe!!.id,
-                    name = recipeName,
-                    genre = selectedGenre,
-                    ingredients = ingredients.toList(),
-                    steps = steps.toList(),
-                    memo = memo
-                )
+                    val recipe = Recipe(
+                        id = originalRecipe!!.id,
+                        name = recipeName,
+                        genre = selectedGenre,
+                        ingredients = ingredients.toList(),
+                        steps = steps.toList(),
+                        memo = memo
+                    )
 
-                scope.launch {
+                    scope.launch {
 
-                    try {
+                        try {
 
-                        recipeDao.update(recipe)
-                        println("保存成功")
-                        navController.popBackStack()
+                            recipeDao.update(recipe)
+                            println("保存成功")
+                            navController.popBackStack()
 
-                    } catch (e: Exception) {
+                        } catch (e: Exception) {
 
-                        println("保存失敗")
+                            println("保存失敗")
 
+                        }
                     }
                 }
+            ) {
+                Text("保存")
             }
-        ) {
-            Text("保存")
-        }
 
-        Button(
-            onClick = {
-                navController.popBackStack()
+            Button(
+                onClick = {
+                    navController.popBackStack()
+                }
+            ) {
+                Text("戻る")
             }
-        ) {
-            Text("戻る")
         }
     }
 }

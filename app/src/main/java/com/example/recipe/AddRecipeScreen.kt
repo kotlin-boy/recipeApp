@@ -23,6 +23,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.launch
 
+//ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+
 
 @Composable
 fun AddRecipeScreen(
@@ -31,36 +34,8 @@ fun AddRecipeScreen(
     //フォーカス解除用
     val focusManager = LocalFocusManager.current
 
-    //状態管理変数ゾーン
-    //レシピ名
-    var recipeName by remember {
-        mutableStateOf("")
-    }
-
-    //ジャンル名
-    var selectedGenre by remember {
-        mutableStateOf(RecipeGenre.MAIN)
-    }
-
-    //プルダウンメニューのON・OFF
-    var expanded by remember {
-        mutableStateOf(false)
-    }
-
-    //材料のリスト
-    val ingredients = remember {
-        mutableStateListOf("")
-    }
-
-    //メモゾーン
-    var memo by remember {
-        mutableStateOf("")
-    }
-
-    //手順のリスト
-    val steps = remember {
-        mutableStateListOf("")
-    }
+    //ViewModel
+    val viewModel: AddRecipeViewModel = viewModel()
 
     //非同期処理用
     val scope = rememberCoroutineScope()
@@ -95,53 +70,31 @@ fun AddRecipeScreen(
         //レシピ用コンポーズ
         RecipeForm(
             //レシピ名の状態変数とイベント関数を渡す
-            recipeName = recipeName,
-            onRecipeNameChange = {
-                recipeName = it
-            },
+            recipeName = viewModel.recipeName,
+            onRecipeNameChange = viewModel::updateRecipeName,
 
             //ジャンルドロップダウンの状態変数とイベント関数を渡す
-            expanded = expanded,
-            onExpandClick = {expanded = true},
-            onDismissRequest = {expanded = false},
-            selectedGenre = selectedGenre,
-            onGenreSelected = { genre ->
-                selectedGenre = genre
-                expanded = false
-            },
+            expanded = viewModel.expanded,
+            onExpandClick = viewModel::expendGenre,
+            onDismissRequest = viewModel::dismissGenre,
+            selectedGenre = viewModel.selectedGenre,
+            onGenreSelected = viewModel::updateGenre,
 
             //材料の状態リストとイベント関数を渡す
-            ingredients = ingredients,
-            onIngredientValueChange = { index, value ->
-                ingredients[index] = value
-            },
-            onRemoveIngredient = { index ->
-                if (ingredients.size > 1) {
-                    ingredients.removeAt(index)
-                }
-            },
-            onAddIngredient = {
-                ingredients.add("")
-            },
-            onAddStep = {
-                steps.add("")
-            },
+            ingredients = viewModel.ingredients,
+            onIngredientValueChange = viewModel::updateIngredient,
+            onRemoveIngredient = viewModel::removeIngredient,
+            onAddIngredient = viewModel::addIngredient,
 
             //手順の状態リストとイベント関数を渡す
-            steps = steps,
-            onStepValueChange = { index, value ->
-                steps[index] = value
-            },
-            onRemoveStep = { index ->
-                if (steps.size > 1)
-                    steps.removeAt(index)
-            },
+            steps = viewModel.steps,
+            onStepValueChange = viewModel::updateStep,
+            onRemoveStep = viewModel::removeStep,
+            onAddStep = viewModel::addStep,
 
             //メモの状態変数とイベント関数を渡す
-            memo = memo,
-            onMemoValueChange = {
-                memo = it
-            },
+            memo = viewModel.memo,
+            onMemoValueChange = viewModel::updateMemo,
         )
 
         //保存処理
@@ -151,11 +104,11 @@ fun AddRecipeScreen(
 
                     val recipe = Recipe(
                         id = 0,
-                        name = recipeName,
-                        genre = selectedGenre,
-                        ingredients = ingredients.toList(),
-                        steps = steps.toList(),
-                        memo = memo
+                        name = viewModel.recipeName,
+                        genre = viewModel.selectedGenre,
+                        ingredients = viewModel.ingredients.toList(),
+                        steps = viewModel.steps.toList(),
+                        memo = viewModel.memo
                     )
 
                     scope.launch {
