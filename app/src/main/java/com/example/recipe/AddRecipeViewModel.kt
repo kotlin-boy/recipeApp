@@ -3,11 +3,17 @@ package com.example.recipe
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 
-class AddRecipeViewModel : ViewModel() {
+@HiltViewModel
+class AddRecipeViewModel @Inject constructor(
+    private val repository: RecipeRepository
+) : ViewModel() {
 //変数ゾーン
     //レシピ名
     var recipeName by mutableStateOf("")
@@ -93,5 +99,21 @@ class AddRecipeViewModel : ViewModel() {
     //メモ更新
     fun updateMemo(value: String) {
         memo = value
+    }
+
+    //値を格納
+    fun saveRecipe() {
+        val recipe = Recipe(
+            id = 0,
+            name = recipeName,
+            genre = selectedGenre,
+            ingredients = ingredients.toList(),
+            steps = steps.toList(),
+            memo = memo
+        )
+        //DBに挿入　非同期処理
+        viewModelScope.launch {
+            repository.insert(recipe)
+        }
     }
 }

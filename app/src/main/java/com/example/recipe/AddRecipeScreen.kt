@@ -1,7 +1,6 @@
 package com.example.recipe
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,22 +9,15 @@ import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.runtime.rememberCoroutineScope
+
 import androidx.compose.ui.platform.LocalContext
-import kotlinx.coroutines.launch
-
-//ViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
-
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun AddRecipeScreen(
@@ -35,20 +27,10 @@ fun AddRecipeScreen(
     val focusManager = LocalFocusManager.current
 
     //ViewModel
-    val viewModel: AddRecipeViewModel = viewModel()
-
-    //非同期処理用
-    val scope = rememberCoroutineScope()
+    val viewModel: AddRecipeViewModel = hiltViewModel()
 
     //現在のアプリ状態の保持
     val context = LocalContext.current
-
-    //データベースの作成(static関数使用)
-    val database = remember {
-        RecipeDatabase.create(context)
-    }
-
-    val recipeDao = database.recipeDao()
 
 ////////////////////////UIゾーン////////////////////////
 
@@ -101,30 +83,8 @@ fun AddRecipeScreen(
         Row{
             Button(
                 onClick = {
-
-                    val recipe = Recipe(
-                        id = 0,
-                        name = viewModel.recipeName,
-                        genre = viewModel.selectedGenre,
-                        ingredients = viewModel.ingredients.toList(),
-                        steps = viewModel.steps.toList(),
-                        memo = viewModel.memo
-                    )
-
-                    scope.launch {
-
-                        try {
-
-                            recipeDao.insert(recipe)
-                            println("保存成功")
-                            navController.popBackStack()
-
-                        } catch (e: Exception) {
-
-                            println("保存失敗")
-
-                        }
-                    }
+                    viewModel.saveRecipe()
+                    navController.popBackStack()
                 }
             ) {
                 Text("保存")
