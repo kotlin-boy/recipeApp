@@ -29,9 +29,6 @@ fun AddRecipeScreen(
     //ViewModel
     val viewModel: AddRecipeViewModel = hiltViewModel()
 
-    //現在のアプリ状態の保持
-    val context = LocalContext.current
-
 ////////////////////////UIゾーン////////////////////////
 
     Column(

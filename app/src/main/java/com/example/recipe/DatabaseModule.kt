@@ -6,6 +6,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 //hiltの部品作成宣言
 @Module
@@ -14,6 +15,7 @@ object DatabaseModule {
 
     //この関数でオブジェクトを作る宣言(DB)
     @Provides
+    @Singleton
     fun provideDatabase(
         //composeではないから下記のアノテで状態取得
         @ApplicationContext context: Context
@@ -23,6 +25,7 @@ object DatabaseModule {
 
     //この関数でオブジェクトを作る宣言(DB操作)
     @Provides
+    @Singleton
     fun provideRecipeDao(
         database: RecipeDatabase
     ): RecipeDao {

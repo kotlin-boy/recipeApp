@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 
@@ -37,61 +38,12 @@ fun EditRecipeScreen(
 
     val focusManager = LocalFocusManager.current
 
-    val context = LocalContext.current
+    //ViewModel
+    val viewModel: EditRecipeViewModel = hiltViewModel()
 
-    val database = remember {
-        RecipeDatabase.create(context)
-    }
-
-    val recipeDao = database.recipeDao()
-
-    var originalRecipe by remember {
-        mutableStateOf<Recipe?>(null)
-    }
-
-    val scope = rememberCoroutineScope()
-
-
-    //状態管理変数
-    var recipeName by remember {
-        mutableStateOf("")
-    }
-
-    var selectedGenre by remember {
-        mutableStateOf(RecipeGenre.MAIN)
-    }
-
-    val ingredients = remember {
-        mutableStateListOf("")
-    }
-
-    val steps = remember {
-        mutableStateListOf("")
-    }
-
-    var memo by remember {
-        mutableStateOf("")
-    }
-
-    var expanded by remember {
-        mutableStateOf(false)
-    }
 
     LaunchedEffect(recipeId){
-        originalRecipe = recipeDao.getRecipeById(recipeId)
-        originalRecipe?.let {
-
-            recipeName = it.name
-            selectedGenre = it.genre
-
-            ingredients.clear()
-            ingredients.addAll(it.ingredients)
-
-            steps.clear()
-            steps.addAll(it.steps)
-
-            memo = it.memo
-        }
+        viewModel.loadRecipe(recipeId)
     }
 
     /////////////////ここから画面//////////////////////
@@ -114,82 +66,39 @@ fun EditRecipeScreen(
         //レシピ用コンポーズ
         RecipeForm(
             //レシピ名の状態変数とイベント関数を渡す
-            recipeName = recipeName,
-            onRecipeNameChange = {
-                recipeName = it
-            },
+            recipeName = viewModel.recipeName,
+            onRecipeNameChange = viewModel::updateRecipeName,
 
             //ジャンルドロップダウンの状態変数とイベント関数を渡す
-            expanded = expanded,
-            onExpandClick = {expanded = true},
-            onDismissRequest = {expanded = false},
-            selectedGenre = selectedGenre,
-            onGenreSelected = { genre ->
-                selectedGenre = genre
-                expanded = false
-            },
+            expanded = viewModel.expanded,
+            onExpandClick = viewModel::expendGenre,
+            onDismissRequest = viewModel::dismissGenre,
+            selectedGenre = viewModel.selectedGenre,
+            onGenreSelected = viewModel::updateGenre,
 
             //材料の状態リストとイベント関数を渡す
-            ingredients = ingredients,
-            onIngredientValueChange = { index, value ->
-                ingredients[index] = value
-            },
-            onRemoveIngredient = { index ->
-                if (ingredients.size > 1) {
-                    ingredients.removeAt(index)
-                }
-            },
-            onAddIngredient = {
-                ingredients.add("")
-            },
-            onAddStep = {
-                steps.add("")
-            },
+            ingredients = viewModel.ingredients,
+            onIngredientValueChange = viewModel::updateIngredient,
+            onRemoveIngredient = viewModel::removeIngredient,
+            onAddIngredient = viewModel::addIngredient,
 
             //手順の状態リストとイベント関数を渡す
-            steps = steps,
-            onStepValueChange = { index, value ->
-                steps[index] = value
-            },
-            onRemoveStep = { index ->
-                if (steps.size > 1)
-                    steps.removeAt(index)
-            },
+            steps = viewModel.steps,
+            onStepValueChange = viewModel::updateStep,
+            onRemoveStep = viewModel::removeStep,
+            onAddStep = viewModel::addStep,
 
             //メモの状態変数とイベント関数を渡す
-            memo = memo,
-            onMemoValueChange = {
-                memo = it
-            },
+            memo = viewModel.memo,
+            onMemoValueChange = viewModel::updateMemo,
         )
 
-        Row {
+        //保存処理
+        Row{
             Button(
                 onClick = {
-
-                    val recipe = Recipe(
-                        id = originalRecipe!!.id,
-                        name = recipeName,
-                        genre = selectedGenre,
-                        ingredients = ingredients.toList(),
-                        steps = steps.toList(),
-                        memo = memo
-                    )
-
-                    scope.launch {
-
-                        try {
-
-                            recipeDao.update(recipe)
-                            println("保存成功")
-                            navController.popBackStack()
-
-                        } catch (e: Exception) {
-
-                            println("保存失敗")
-
-                        }
-                    }
+                    viewModel.updateRecipe()
+                    navController.popBackStack()
                 }
             ) {
                 Text("保存")
