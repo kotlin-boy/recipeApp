@@ -18,4 +18,12 @@ class RecipeRepository @Inject constructor(
     suspend fun getRecipeById(id: Int): Recipe? {
         return recipeDao.getRecipeById(id)
     }
+
+    suspend fun getAll(): List<Recipe> {
+        return recipeDao.getAll()
+    }
+
+    suspend fun delete(recipe: Recipe) {
+        recipeDao.delete(recipe)
+    }
 }

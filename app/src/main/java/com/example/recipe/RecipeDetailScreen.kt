@@ -17,6 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 
@@ -25,24 +26,13 @@ fun RecipeDetailScreen(
     navController: NavController,
     recipeId: Int
 ) {
-    val context = LocalContext.current
+    //hilt
+    val viewModel: RecipeDatailViewModel = hiltViewModel()
 
-    val database = remember {
-        RecipeDatabase.create(context)
+    //開幕で指定レシピ取得
+    LaunchedEffect(recipeId) {
+        viewModel.loadRecipe(recipeId)
     }
-
-    val recipeDao = database.recipeDao()
-
-    var recipe by remember {
-        mutableStateOf<Recipe?>(null)
-    }
-
-    val scope = rememberCoroutineScope()
-
-    LaunchedEffect(recipeId){
-        recipe = recipeDao.getRecipeById(recipeId)
-    }
-
 
     Column(
         modifier = Modifier
@@ -50,18 +40,20 @@ fun RecipeDetailScreen(
             .safeDrawingPadding()
             .padding(16.dp)
     ) {
-        if (recipe != null) {
+        if (viewModel.recipe != null) {
+
+            val recipe = viewModel.recipe!!
 
             Text(
-                text = recipe!!.name
+                text = recipe.name
             )
 
             Text(
-                text = recipe!!.genre.displayName
+                text = recipe.genre.displayName
             )
 
             Text("材料")
-            recipe!!.ingredients.forEach { ingredient ->
+            recipe.ingredients.forEach { ingredient ->
 
                 Text(
                     text = "・$ingredient"
@@ -70,7 +62,7 @@ fun RecipeDetailScreen(
             }
 
             Text("手順")
-            recipe!!.steps.forEachIndexed { index, step ->
+            recipe.steps.forEachIndexed { index, step ->
 
                 Text(
                     text = "${index + 1}. $step"
@@ -81,7 +73,7 @@ fun RecipeDetailScreen(
             Text("メモ")
 
             Text(
-                text = recipe!!.memo
+                text = recipe.memo
             )
 
             Row {
@@ -90,18 +82,19 @@ fun RecipeDetailScreen(
                     onClick = {
                         //編集画面へ
                         navController.navigate(
-                            "edit_recipe/${recipe!!.id}"
+                            "edit_recipe/${recipe.id}"
                         )
                     }
                 ) {
                     Text("編集")
                 }
 
+                //非同期処理
+                val scope = rememberCoroutineScope()
                 Button(
                     onClick = {
-                        //削除処理が終わってから前画面へ
                         scope.launch {
-                            recipeDao.delete(recipe!!)
+                            viewModel.deleteRecipe()
                             navController.popBackStack()
                         }
                     }
