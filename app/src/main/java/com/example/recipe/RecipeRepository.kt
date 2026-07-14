@@ -1,5 +1,6 @@
 package com.example.recipe
 
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,11 +20,18 @@ class RecipeRepository @Inject constructor(
         return recipeDao.getRecipeById(id)
     }
 
-    suspend fun getAll(): List<Recipe> {
+    fun getAll(): Flow<List<Recipe>> {
         return recipeDao.getAll()
     }
 
     suspend fun delete(recipe: Recipe) {
         recipeDao.delete(recipe)
+    }
+
+    fun searchRecipe(
+        keyword: String,
+        genre: RecipeGenre?
+    ): Flow<List<Recipe>> {
+        return recipeDao.searchRecipe(keyword, genre)
     }
 }

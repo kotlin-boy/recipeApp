@@ -26,6 +26,6 @@ class RecipeDatailViewModel @Inject constructor(
 
     suspend fun deleteRecipe() {
         val recipe = recipe ?: return
-            repository.delete(recipe)
+        repository.delete(recipe)
     }
 }

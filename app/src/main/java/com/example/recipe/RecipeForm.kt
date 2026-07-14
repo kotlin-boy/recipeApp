@@ -27,8 +27,8 @@ fun RecipeForm(
     expanded: Boolean,
     onExpandClick: () -> Unit,
     onDismissRequest: () -> Unit,
-    selectedGenre: RecipeGenre,
-    onGenreSelected: (RecipeGenre) -> Unit,
+    selectedGenre: RecipeGenre?,
+    onGenreSelected: (RecipeGenre?) -> Unit,
     memo: String,
     onMemoValueChange: (String) -> Unit,
     ingredients: List<String>,
@@ -49,31 +49,13 @@ fun RecipeForm(
     )
 
     //ジャンル指定
-    Box {
-        Button(
-            onClick = onExpandClick
-        ) {
-            Text(selectedGenre.displayName)
-        }
-        //ドロップダウンの用意
-        DropdownMenu(
-            expanded = expanded,
-            //フォーカス切れると閉じる
-            onDismissRequest = onDismissRequest
-        ) {
-            RecipeGenre.entries.forEach { genre ->
-                //ドロップダウンメニューの項目
-                DropdownMenuItem(
-                    text = {
-                        Text(genre.displayName)
-                    },
-                    onClick = {
-                        onGenreSelected(genre)
-                    }
-                )
-            }
-        }
-    }
+    GenreDropDown(
+        selectedGenre = selectedGenre,
+        expanded = expanded,
+        onExpandClick = onExpandClick,
+        onDismissRequest = onDismissRequest,
+        onGenreSelected = onGenreSelected
+    )
 
     //材料の記載・追加
     Text("材料")

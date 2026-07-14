@@ -51,7 +51,8 @@ class AddRecipeViewModel @Inject constructor(
     }
 
     //ジャンル選択
-    fun updateGenre(genre: RecipeGenre) {
+    fun updateGenre(genre: RecipeGenre?) {
+        genre ?: return
         selectedGenre = genre
         expanded = false
     }
