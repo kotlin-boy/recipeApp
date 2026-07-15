@@ -1,5 +1,6 @@
 package com.example.recipe
 
+import androidx.compose.material3.AlertDialog
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
+import androidx.compose.runtime.mutableStateOf
 
 @Composable
 fun RecipeDetailScreen(
@@ -28,6 +30,12 @@ fun RecipeDetailScreen(
 ) {
     //hilt
     val viewModel: RecipeDatailViewModel = hiltViewModel()
+
+    var showDeleteDialog by remember {
+        mutableStateOf(false)
+    }
+
+    val scope = rememberCoroutineScope()
 
     //開幕で指定レシピ取得
     LaunchedEffect(recipeId) {
@@ -89,14 +97,9 @@ fun RecipeDetailScreen(
                     Text("編集")
                 }
 
-                //非同期処理
-                val scope = rememberCoroutineScope()
                 Button(
                     onClick = {
-                        scope.launch {
-                            viewModel.deleteRecipe()
-                            navController.popBackStack()
-                        }
+                        showDeleteDialog = true
                     }
                 ) {
                     Text("削除")
@@ -109,6 +112,42 @@ fun RecipeDetailScreen(
                 text = "読み込み中..."
             )
 
+        }
+
+        if (showDeleteDialog) {
+            AlertDialog(
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            scope.launch {
+                                showDeleteDialog = false
+                                viewModel.deleteRecipe()
+                                navController.popBackStack()
+                            }
+                        }
+                    ) {
+                        Text("削除")
+                    }
+                },
+                dismissButton = {
+                    Button(
+                        onClick = {
+                            showDeleteDialog = false
+                        }
+                    ){
+                        Text("キャンセル")
+                    }
+                },
+                onDismissRequest = {
+                    showDeleteDialog = false
+                },
+                title = {
+                    Text("削除の確認")
+                },
+                text = {
+                    Text("このレシピを削除しますか？")
+                }
+            )
         }
     }
 }
