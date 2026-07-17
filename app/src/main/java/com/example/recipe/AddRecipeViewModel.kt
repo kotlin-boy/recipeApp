@@ -33,6 +33,9 @@ class AddRecipeViewModel @Inject constructor(
     //メモゾーン
     var memo by mutableStateOf("")
 
+    //エラーメッセージ用
+    var errorMessage by mutableStateOf<String?>(null)
+
 
 //関数ゾーン
     //レシピ名
@@ -103,18 +106,53 @@ class AddRecipeViewModel @Inject constructor(
     }
 
     //値を格納
-    fun saveRecipe() {
+    fun saveRecipe() : Boolean{
+        //空要素チェック
+        if (recipeName.isBlank()) {
+            errorMessage = "レシピ名を入力してください"
+            return false
+        }
+        if (
+            ingredients.all {
+                it.isBlank()
+            }
+        ) {
+            errorMessage = "材料を入力してください"
+            return false
+        }
+        if (
+            steps.all {
+                it.isBlank()
+            }
+        ) {
+            errorMessage = "手順を入力してください"
+            return false
+        }
+
+        errorMessage = null
+
+        //保存フェーズ
         val recipe = Recipe(
             id = 0,
             name = recipeName,
             genre = selectedGenre,
-            ingredients = ingredients.toList(),
-            steps = steps.toList(),
+            ingredients = ingredients.filter {
+                it.isNotBlank()
+            },
+            steps = steps.filter {
+                it.isNotBlank()
+            },
             memo = memo
         )
         //DBに挿入　非同期処理
         viewModelScope.launch {
             repository.insert(recipe)
         }
+
+        return true
+    }
+
+    fun clearErrorMessage() {
+        errorMessage = null
     }
 }

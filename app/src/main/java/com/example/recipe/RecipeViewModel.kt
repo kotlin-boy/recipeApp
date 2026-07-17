@@ -22,6 +22,7 @@ class RecipeViewModel @Inject constructor(
     //レシピ格納
     private val _recipes =
         MutableStateFlow<List<Recipe>>(emptyList())
+
     //読み取り変数へ
     val recipes = _recipes.asStateFlow()
 
@@ -33,6 +34,17 @@ class RecipeViewModel @Inject constructor(
     var selectedGenre by mutableStateOf<RecipeGenre?>(null)
         private set
 
+    //ソート用
+    var sortOrder by mutableStateOf(SortOrder.OLDEST)
+        private set
+
+    //ソート種類判別用
+    fun updateSortOrder(sortOrder: SortOrder) {
+        this.sortOrder = sortOrder
+        loadRecipes()
+    }
+
+    //初期画面のレシピ
     init {
         loadRecipes()
     }
@@ -40,10 +52,27 @@ class RecipeViewModel @Inject constructor(
     //レシピ読込
     private fun loadRecipes() {
         viewModelScope.launch {
-            repository.searchRecipe(
-                keyword = searchKeyword,
-                genre = selectedGenre
-            ).collectLatest { recipeList ->
+            val recipeFlow = when (sortOrder) {
+                SortOrder.OLDEST -> {
+                    repository.searchRecipeByOldest(
+                        keyword = searchKeyword,
+                        genre = selectedGenre
+                    )
+                }
+                SortOrder.NEWEST -> {
+                    repository.searchRecipeByNewest(
+                        keyword = searchKeyword,
+                        genre = selectedGenre
+                    )
+                }
+                SortOrder.NAME -> {
+                    repository.searchRecipeByNameAsc(
+                        keyword = searchKeyword,
+                        genre = selectedGenre
+                    )
+                }
+            }
+            recipeFlow.collectLatest { recipeList ->
                 _recipes.value = recipeList
             }
         }

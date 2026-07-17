@@ -38,6 +38,7 @@ interface RecipeDao {
         recipe: Recipe
     )
 
+    //レシピ取得
     @Query("""
         SELECT *
         FROM Recipe
@@ -45,6 +46,45 @@ interface RecipeDao {
         AND (:genre IS NULL OR genre = :genre)
     """)
     fun searchRecipe(
+        keyword: String,
+        genre: RecipeGenre?
+    ): Flow<List<Recipe>>
+
+    //レシピ名昇順取得
+    @Query("""
+        SELECT *
+        FROM Recipe
+        WHERE name LIKE '%' || :keyword || '%' 
+        AND (:genre IS NULL OR genre = :genre)
+        ORDER BY name ASC
+    """)
+    fun searchRecipeByNameAsc(
+        keyword: String,
+        genre: RecipeGenre?
+    ): Flow<List<Recipe>>
+
+    //レシピID昇順取得
+    @Query("""
+        SELECT *
+        FROM Recipe
+        WHERE name LIKE '%' || :keyword || '%' 
+        AND (:genre IS NULL OR genre = :genre)
+        ORDER BY id ASC
+    """)
+    fun searchRecipeByOldest(
+        keyword: String,
+        genre: RecipeGenre?
+    ): Flow<List<Recipe>>
+
+    //レシピID降順取得
+    @Query("""
+        SELECT *
+        FROM Recipe
+        WHERE name LIKE '%' || :keyword || '%' 
+        AND (:genre IS NULL OR genre = :genre)
+        ORDER BY id DESC
+    """)
+    fun searchRecipeByNewest(
         keyword: String,
         genre: RecipeGenre?
     ): Flow<List<Recipe>>

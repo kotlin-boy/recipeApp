@@ -9,6 +9,9 @@ import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -29,70 +32,87 @@ fun AddRecipeScreen(
     //ViewModel
     val viewModel: AddRecipeViewModel = hiltViewModel()
 
+    val snackbarHostState = remember {
+        SnackbarHostState()
+    }
+
+    LaunchedEffect(viewModel.errorMessage) {
+        val message = viewModel.errorMessage ?: return@LaunchedEffect
+        snackbarHostState.showSnackbar(message)
+        viewModel.clearErrorMessage()
+    }
+
 ////////////////////////UIゾーン////////////////////////
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .safeDrawingPadding()
+                .padding(innerPadding)
+                .padding(16.dp)
+                .verticalScroll(
+                    rememberScrollState()
+                )
+                .clickable {
+                    focusManager.clearFocus()
+                }
+        ) {
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .safeDrawingPadding()
-            .padding(16.dp)
-            .verticalScroll(
-                rememberScrollState()
+            Text("レシピ追加")
+
+            //レシピ用コンポーズ
+            RecipeForm(
+                //レシピ名の状態変数とイベント関数を渡す
+                recipeName = viewModel.recipeName,
+                onRecipeNameChange = viewModel::updateRecipeName,
+
+                //ジャンルドロップダウンの状態変数とイベント関数を渡す
+                expanded = viewModel.expanded,
+                onExpandClick = viewModel::expendGenre,
+                onDismissRequest = viewModel::dismissGenre,
+                selectedGenre = viewModel.selectedGenre,
+                onGenreSelected = viewModel::updateGenre,
+
+                //材料の状態リストとイベント関数を渡す
+                ingredients = viewModel.ingredients,
+                onIngredientValueChange = viewModel::updateIngredient,
+                onRemoveIngredient = viewModel::removeIngredient,
+                onAddIngredient = viewModel::addIngredient,
+
+                //手順の状態リストとイベント関数を渡す
+                steps = viewModel.steps,
+                onStepValueChange = viewModel::updateStep,
+                onRemoveStep = viewModel::removeStep,
+                onAddStep = viewModel::addStep,
+
+                //メモの状態変数とイベント関数を渡す
+                memo = viewModel.memo,
+                onMemoValueChange = viewModel::updateMemo,
             )
-            .clickable {
-                focusManager.clearFocus()
-            }
-    ) {
 
-        Text("レシピ追加")
-
-        //レシピ用コンポーズ
-        RecipeForm(
-            //レシピ名の状態変数とイベント関数を渡す
-            recipeName = viewModel.recipeName,
-            onRecipeNameChange = viewModel::updateRecipeName,
-
-            //ジャンルドロップダウンの状態変数とイベント関数を渡す
-            expanded = viewModel.expanded,
-            onExpandClick = viewModel::expendGenre,
-            onDismissRequest = viewModel::dismissGenre,
-            selectedGenre = viewModel.selectedGenre,
-            onGenreSelected = viewModel::updateGenre,
-
-            //材料の状態リストとイベント関数を渡す
-            ingredients = viewModel.ingredients,
-            onIngredientValueChange = viewModel::updateIngredient,
-            onRemoveIngredient = viewModel::removeIngredient,
-            onAddIngredient = viewModel::addIngredient,
-
-            //手順の状態リストとイベント関数を渡す
-            steps = viewModel.steps,
-            onStepValueChange = viewModel::updateStep,
-            onRemoveStep = viewModel::removeStep,
-            onAddStep = viewModel::addStep,
-
-            //メモの状態変数とイベント関数を渡す
-            memo = viewModel.memo,
-            onMemoValueChange = viewModel::updateMemo,
-        )
-
-        //保存処理
-        Row{
-            Button(
-                onClick = {
-                    viewModel.saveRecipe()
-                    navController.popBackStack()
+            //保存処理
+            Row {
+                Button(
+                    onClick = {
+                        if (viewModel.saveRecipe()) {
+                            navController.popBackStack()
+                        }
+                    }
+                ) {
+                    Text("保存")
                 }
-            ) {
-                Text("保存")
-            }
 
-            Button(
-                onClick = {
-                    navController.popBackStack()
+                Button(
+                    onClick = {
+                        navController.popBackStack()
+                    }
+                ) {
+                    Text("戻る")
                 }
-            ) {
-                Text("戻る")
             }
         }
     }

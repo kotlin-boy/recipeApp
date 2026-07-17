@@ -3,6 +3,7 @@ package com.example.recipe
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -43,7 +44,8 @@ fun RecipeViewScreen(
     //flow
     val recipes by viewModel.recipes.collectAsState()
 
-    var expanded by remember { mutableStateOf(false) }
+    var genreExpanded by remember { mutableStateOf(false) }
+    var sortExpanded by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -79,23 +81,42 @@ fun RecipeViewScreen(
             }
         )
 
-        //ジャンルフィルター
-        GenreDropDown(
-            selectedGenre = viewModel.selectedGenre,
-            expanded = expanded,
-            onExpandClick = {
-                expanded = true
-            },
-            onDismissRequest = {
-                expanded = false
-            },
-            onGenreSelected = { genre ->
-                viewModel.updateSelectedGenre(genre)
-                expanded = false
-            },
-            showAllItem = true
-        )
+        Row {
+            //ジャンルフィルター
+            GenreDropDown(
+                selectedGenre = viewModel.selectedGenre,
+                expanded = genreExpanded,
+                onExpandClick = {
+                    genreExpanded = true
+                    sortExpanded = false
+                },
+                onDismissRequest = {
+                    genreExpanded = false
+                },
+                onGenreSelected = { genre ->
+                    viewModel.updateSelectedGenre(genre)
+                    genreExpanded = false
+                },
+                showAllItem = true
+            )
 
+            //ソート選択
+            SortDropDown(
+                selectedSort = viewModel.sortOrder,
+                expanded = sortExpanded,
+                onExpandClick = {
+                    sortExpanded = true
+                    genreExpanded = false
+                },
+                onDismissRequest = {
+                    sortExpanded = false
+                },
+                onSortSelected = { sort ->
+                    viewModel.updateSortOrder(sort)
+                    sortExpanded = false
+                }
+            )
+        }
         LazyVerticalGrid(
             columns = GridCells.Fixed(2)
         ){

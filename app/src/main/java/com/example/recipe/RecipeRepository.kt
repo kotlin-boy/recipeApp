@@ -28,10 +28,27 @@ class RecipeRepository @Inject constructor(
         recipeDao.delete(recipe)
     }
 
-    fun searchRecipe(
+    //レシピID昇順取得
+    fun searchRecipeByOldest(
         keyword: String,
         genre: RecipeGenre?
     ): Flow<List<Recipe>> {
-        return recipeDao.searchRecipe(keyword, genre)
+        return recipeDao.searchRecipeByOldest(keyword, genre)
+    }
+
+    //レシピID降順取得
+    fun searchRecipeByNewest(
+        keyword: String,
+        genre: RecipeGenre?
+    ): Flow<List<Recipe>> {
+        return recipeDao.searchRecipeByNewest(keyword, genre)
+    }
+
+    //レシピ名昇順取得
+    fun searchRecipeByNameAsc(
+        keyword: String,
+        genre: RecipeGenre?
+    ): Flow<List<Recipe>> {
+        return recipeDao.searchRecipeByNameAsc(keyword, genre)
     }
 }
