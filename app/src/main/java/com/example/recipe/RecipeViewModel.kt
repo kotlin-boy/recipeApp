@@ -38,6 +38,10 @@ class RecipeViewModel @Inject constructor(
     var sortOrder by mutableStateOf(SortOrder.OLDEST)
         private set
 
+    //お気に入りフィルター
+    var favoriteOnly by mutableStateOf(false)
+        private set
+
     //ソート種類判別用
     fun updateSortOrder(sortOrder: SortOrder) {
         this.sortOrder = sortOrder
@@ -56,19 +60,22 @@ class RecipeViewModel @Inject constructor(
                 SortOrder.OLDEST -> {
                     repository.searchRecipeByOldest(
                         keyword = searchKeyword,
-                        genre = selectedGenre
+                        genre = selectedGenre,
+                        favoriteOnly = favoriteOnly
                     )
                 }
                 SortOrder.NEWEST -> {
                     repository.searchRecipeByNewest(
                         keyword = searchKeyword,
-                        genre = selectedGenre
+                        genre = selectedGenre,
+                        favoriteOnly = favoriteOnly
                     )
                 }
                 SortOrder.NAME -> {
                     repository.searchRecipeByNameAsc(
                         keyword = searchKeyword,
-                        genre = selectedGenre
+                        genre = selectedGenre,
+                        favoriteOnly = favoriteOnly
                     )
                 }
             }
@@ -89,6 +96,23 @@ class RecipeViewModel @Inject constructor(
         genre: RecipeGenre?
     ) {
         selectedGenre = genre
+        loadRecipes()
+    }
+
+    //お気に入りトグル
+    fun toggleFavorite(recipe: Recipe) {
+        viewModelScope.launch {
+            repository.updateFavorite(
+                recipe.id,
+                !recipe.isFavorite
+            )
+
+        }
+    }
+
+    //お気に入りフィルター
+    fun toggleFavoriteFilter() {
+        favoriteOnly = !favoriteOnly
         loadRecipes()
     }
 }

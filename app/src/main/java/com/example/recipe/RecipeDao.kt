@@ -42,7 +42,7 @@ interface RecipeDao {
     @Query("""
         SELECT *
         FROM Recipe
-        WHERE name LIKE '%' || :keyword || '%' 
+        WHERE name LIKE '%' || :keyword || '%'
         AND (:genre IS NULL OR genre = :genre)
     """)
     fun searchRecipe(
@@ -56,11 +56,13 @@ interface RecipeDao {
         FROM Recipe
         WHERE name LIKE '%' || :keyword || '%' 
         AND (:genre IS NULL OR genre = :genre)
+        AND (:favoriteOnly = 0 OR isFavorite = 1)
         ORDER BY name ASC
     """)
     fun searchRecipeByNameAsc(
         keyword: String,
-        genre: RecipeGenre?
+        genre: RecipeGenre?,
+        favoriteOnly: Boolean
     ): Flow<List<Recipe>>
 
     //レシピID昇順取得
@@ -69,11 +71,13 @@ interface RecipeDao {
         FROM Recipe
         WHERE name LIKE '%' || :keyword || '%' 
         AND (:genre IS NULL OR genre = :genre)
+        AND (:favoriteOnly = 0 OR isFavorite = 1)
         ORDER BY id ASC
     """)
     fun searchRecipeByOldest(
         keyword: String,
-        genre: RecipeGenre?
+        genre: RecipeGenre?,
+        favoriteOnly: Boolean
     ): Flow<List<Recipe>>
 
     //レシピID降順取得
@@ -82,10 +86,19 @@ interface RecipeDao {
         FROM Recipe
         WHERE name LIKE '%' || :keyword || '%' 
         AND (:genre IS NULL OR genre = :genre)
+        AND (:favoriteOnly = 0 OR isFavorite = 1)
         ORDER BY id DESC
     """)
     fun searchRecipeByNewest(
         keyword: String,
-        genre: RecipeGenre?
+        genre: RecipeGenre?,
+        favoriteOnly: Boolean
     ): Flow<List<Recipe>>
+
+    @Query("""
+        UPDATE recipe
+        SET isFavorite = :isFavorite
+        WHERE id = :id
+    """)
+    suspend fun updateFavorite(id: Int, isFavorite: Boolean)
 }

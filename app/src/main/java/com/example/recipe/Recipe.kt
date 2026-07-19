@@ -13,5 +13,6 @@ data class Recipe(
     val genre: RecipeGenre,
     val ingredients: List<String>,
     val steps: List<String>,
-    val memo: String
+    val memo: String,
+    val isFavorite: Boolean = false
 )

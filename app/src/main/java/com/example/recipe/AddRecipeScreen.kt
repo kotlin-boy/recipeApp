@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -34,6 +35,11 @@ fun AddRecipeScreen(
 
     val snackbarHostState = remember {
         SnackbarHostState()
+    }
+
+    //戻る確認ダイアログ用
+    var showBackDialog by remember {
+        mutableStateOf(false)
     }
 
     LaunchedEffect(viewModel.errorMessage) {
@@ -92,28 +98,19 @@ fun AddRecipeScreen(
                 //メモの状態変数とイベント関数を渡す
                 memo = viewModel.memo,
                 onMemoValueChange = viewModel::updateMemo,
-            )
-
-            //保存処理
-            Row {
-                Button(
-                    onClick = {
-                        if (viewModel.saveRecipe()) {
-                            navController.popBackStack()
-                        }
-                    }
-                ) {
-                    Text("保存")
-                }
-
-                Button(
-                    onClick = {
+                isFavorite = viewModel.isFavorite,
+                onFavoriteChange = {
+                    viewModel.toggleFavorite()
+                },
+                onSaveClick = {
+                    if (viewModel.saveRecipe()) {
                         navController.popBackStack()
                     }
-                ) {
-                    Text("戻る")
+                },
+                onBackClick = {
+                    navController.popBackStack()
                 }
-            }
+            )
         }
     }
 }

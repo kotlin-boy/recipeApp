@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -41,6 +42,10 @@ fun EditRecipeScreen(
     //ViewModel
     val viewModel: EditRecipeViewModel = hiltViewModel()
 
+    //戻る確認ダイアログ用
+    var showBackDialog by remember {
+        mutableStateOf(false)
+    }
 
     LaunchedEffect(recipeId){
         viewModel.loadRecipe(recipeId)
@@ -91,26 +96,17 @@ fun EditRecipeScreen(
             //メモの状態変数とイベント関数を渡す
             memo = viewModel.memo,
             onMemoValueChange = viewModel::updateMemo,
+            isFavorite = viewModel.isFavorite,
+            onFavoriteChange = {
+                viewModel.toggleFavorite()
+            },
+            onSaveClick = {
+                viewModel.updateRecipe()
+                navController.popBackStack()
+            },
+            onBackClick = {
+                navController.popBackStack()
+            }
         )
-
-        //保存処理
-        Row{
-            Button(
-                onClick = {
-                    viewModel.updateRecipe()
-                    navController.popBackStack()
-                }
-            ) {
-                Text("保存")
-            }
-
-            Button(
-                onClick = {
-                    navController.popBackStack()
-                }
-            ) {
-                Text("戻る")
-            }
-        }
     }
 }

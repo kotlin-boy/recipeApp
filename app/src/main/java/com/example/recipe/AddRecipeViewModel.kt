@@ -36,6 +36,10 @@ class AddRecipeViewModel @Inject constructor(
     //エラーメッセージ用
     var errorMessage by mutableStateOf<String?>(null)
 
+    //お気に入り状態
+    var isFavorite by mutableStateOf(false)
+        private set
+
 
 //関数ゾーン
     //レシピ名
@@ -152,7 +156,13 @@ class AddRecipeViewModel @Inject constructor(
         return true
     }
 
+    //エラーメッセージ初期化
     fun clearErrorMessage() {
         errorMessage = null
+    }
+
+    //お気に入りトグル
+    fun toggleFavorite() {
+        isFavorite = !isFavorite
     }
 }

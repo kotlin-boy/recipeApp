@@ -31,24 +31,35 @@ class RecipeRepository @Inject constructor(
     //レシピID昇順取得
     fun searchRecipeByOldest(
         keyword: String,
-        genre: RecipeGenre?
+        genre: RecipeGenre?,
+        favoriteOnly: Boolean
     ): Flow<List<Recipe>> {
-        return recipeDao.searchRecipeByOldest(keyword, genre)
+        return recipeDao.searchRecipeByOldest(keyword, genre, favoriteOnly)
     }
 
     //レシピID降順取得
     fun searchRecipeByNewest(
         keyword: String,
-        genre: RecipeGenre?
+        genre: RecipeGenre?,
+        favoriteOnly: Boolean
     ): Flow<List<Recipe>> {
-        return recipeDao.searchRecipeByNewest(keyword, genre)
+        return recipeDao.searchRecipeByNewest(keyword, genre, favoriteOnly)
     }
 
     //レシピ名昇順取得
     fun searchRecipeByNameAsc(
         keyword: String,
-        genre: RecipeGenre?
+        genre: RecipeGenre?,
+        favoriteOnly: Boolean
     ): Flow<List<Recipe>> {
-        return recipeDao.searchRecipeByNameAsc(keyword, genre)
+        return recipeDao.searchRecipeByNameAsc(keyword, genre, favoriteOnly)
+    }
+
+    //お気に入り更新
+    suspend fun updateFavorite(
+        id: Int,
+        isFavorite: Boolean
+    ) {
+        recipeDao.updateFavorite(id, isFavorite)
     }
 }

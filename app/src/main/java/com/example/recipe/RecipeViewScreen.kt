@@ -32,6 +32,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarBorder
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.style.TextOverflow
 
 
 @Composable
@@ -51,7 +55,7 @@ fun RecipeViewScreen(
         modifier = Modifier
             .fillMaxSize()
             .safeDrawingPadding()
-            .padding(16.dp)
+            .padding(8.dp)
     ) {
 
         Text("レシピ一覧")
@@ -116,9 +120,26 @@ fun RecipeViewScreen(
                     sortExpanded = false
                 }
             )
+
+            //お気に入りフィルター
+            IconButton(
+                onClick = {
+                    viewModel.toggleFavoriteFilter()
+                }
+            ) {
+                Icon(
+                    imageVector =
+                        if (viewModel.favoriteOnly)
+                            Icons.Default.Star
+                        else
+                            Icons.Default.StarBorder,
+                    contentDescription = "お気に入り"
+                )
+            }
         }
         LazyVerticalGrid(
-            columns = GridCells.Fixed(2)
+            columns = GridCells.Fixed(2),
+            modifier = Modifier.fillMaxSize()
         ){
             items(recipes) { recipe ->
 
@@ -128,20 +149,43 @@ fun RecipeViewScreen(
                             "recipe_detail/${recipe.id}"
                         )
                     },
-                    modifier = Modifier.padding(8.dp)
+                    modifier = Modifier.padding(4.dp)
                 ) {
-
-                    Column(
-                        modifier = Modifier.padding(16.dp)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
+                        Column(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(8.dp)
+                        ) {
 
-                        Text(
-                            text = recipe.name
-                        )
+                            Text(
+                                text = recipe.name,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
 
-                        Text(
-                            text = recipe.genre.displayName
-                        )
+                            Text(
+                                text = recipe.genre.displayName
+                            )
+                        }
+
+                        IconButton(
+                            onClick = {
+                                viewModel.toggleFavorite(recipe)
+                            }
+                        ) {
+                            Icon(
+                                imageVector =
+                                    if (recipe.isFavorite)
+                                        Icons.Default.Star
+                                    else
+                                        Icons.Default.StarBorder,
+                                contentDescription = "お気に入り"
+                            )
+                        }
                     }
                 }
             }

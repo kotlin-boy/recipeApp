@@ -38,6 +38,10 @@ class EditRecipeViewModel @Inject constructor(
     //メモゾーン
     var memo by mutableStateOf("")
 
+    //お気に入り状態
+    var isFavorite by mutableStateOf(false)
+        private set
+
     //関数ゾーン
     //レシピ名
     fun updateRecipeName(name: String) {
@@ -139,5 +143,10 @@ class EditRecipeViewModel @Inject constructor(
 
             memo = recipe.memo
         }
+    }
+
+    //お気に入りトグル
+    fun toggleFavorite() {
+        isFavorite = !isFavorite
     }
 }
