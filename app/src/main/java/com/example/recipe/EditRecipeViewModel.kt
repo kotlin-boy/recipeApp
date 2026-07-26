@@ -3,7 +3,6 @@ package com.example.recipe
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -117,7 +116,8 @@ class EditRecipeViewModel @Inject constructor(
             genre = selectedGenre,
             ingredients = ingredients.toList(),
             steps = steps.toList(),
-            memo = memo
+            memo = memo,
+            isFavorite = isFavorite
         )
         //DBに挿入　非同期処理
         viewModelScope.launch {
@@ -142,11 +142,24 @@ class EditRecipeViewModel @Inject constructor(
             steps.addAll(recipe.steps)
 
             memo = recipe.memo
+            isFavorite = recipe.isFavorite
         }
     }
 
     //お気に入りトグル
     fun toggleFavorite() {
         isFavorite = !isFavorite
+    }
+
+    //変更チェック
+    fun hasChanges(): Boolean {
+        val original = originalRecipe ?: return false
+
+        return recipeName != original.name ||
+                selectedGenre != original.genre ||
+                ingredients.toList() != original.ingredients ||
+                steps.toList() != original.steps ||
+                memo != original.memo ||
+                isFavorite != original.isFavorite
     }
 }

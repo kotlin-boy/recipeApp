@@ -2,25 +2,23 @@ package com.example.recipe
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.compose.ui.platform.LocalFocusManager
-
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
@@ -57,7 +55,6 @@ fun AddRecipeScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .safeDrawingPadding()
                 .padding(innerPadding)
                 .padding(16.dp)
                 .verticalScroll(
@@ -67,8 +64,13 @@ fun AddRecipeScreen(
                     focusManager.clearFocus()
                 }
         ) {
-
-            Text("レシピ追加")
+            Text(
+                text = "レシピ追加",
+                fontSize = 36.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                modifier = Modifier.padding(bottom = 24.dp)
+            )
 
             //レシピ用コンポーズ
             RecipeForm(
@@ -109,7 +111,8 @@ fun AddRecipeScreen(
                 },
                 onBackClick = {
                     navController.popBackStack()
-                }
+                },
+                hasChanges = viewModel.hasChanges()
             )
         }
     }

@@ -1,35 +1,27 @@
 package com.example.recipe
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AlertDialog
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun RecipeForm(
@@ -54,6 +46,7 @@ fun RecipeForm(
     onFavoriteChange: () -> Unit,
     onSaveClick: () -> Unit,
     onBackClick: () -> Unit,
+    hasChanges: Boolean,
 ){
 
     var showBackDialog by remember {
@@ -77,6 +70,8 @@ fun RecipeForm(
         onGenreSelected = onGenreSelected
     )
 
+    Spacer(modifier = Modifier.height(16.dp))
+
     //材料の記載・追加
     Text("材料")
     ingredients.forEachIndexed { index, ingredient ->
@@ -91,27 +86,33 @@ fun RecipeForm(
                     Text("材料${index + 1}")
                 }
             )
+
+            Spacer(modifier = Modifier.width(8.dp))
+
             //削除ボタン
-            Button(
+            RecipeButton(
+                text = "×",
                 onClick = {
                     onRemoveIngredient(index)
-                }
-            ) {
-                Text("×")
-            }
+                },
+                modifier = Modifier.padding(top = 10.dp),
+                containerColor = Red,
+                contentColor = White
+            )
         }
     }
-
-    //材料リストの追加
-    Button(
+    //材料追加
+    RecipeButton(
+        text = "＋",
         onClick = {
             onAddIngredient()
         }
-    ) {
-        Text("＋")
-    }
+    )
+
+    Spacer(modifier = Modifier.height(16.dp))
 
     //手順の記載・追加
+    Text("作り方")
     steps.forEachIndexed { index, step ->
 
         Row {
@@ -125,27 +126,34 @@ fun RecipeForm(
                     Text("手順${index + 1}")
                 }
             )
+
+            Spacer(modifier = Modifier.width(8.dp))
+
             //削除ボタン
-            Button(
+            RecipeButton(
+                text = "×",
                 onClick = {
                     onRemoveStep(index)
-                }
-            ) {
-                Text("×")
-            }
+                },
+                modifier = Modifier.padding(top = 10.dp),
+                containerColor = Red,
+                contentColor = White
+            )
         }
     }
 
-    //追加ボタン
-    Button(
+    //材料リストの追加
+    RecipeButton(
+        text = "＋",
         onClick = {
             onAddStep()
         }
-    ) {
-        Text("＋")
-    }
+    )
+
+    Spacer(modifier = Modifier.height(16.dp))
 
     //メモゾーン
+    Text("メモ")
     OutlinedTextField(
         value = memo,
         onValueChange = onMemoValueChange,
@@ -155,20 +163,29 @@ fun RecipeForm(
         minLines = 5
     )
 
-    Row {
-        Button(
-            onClick = onSaveClick
-        ) {
-            Text("保存")
-        }
+    Spacer(modifier = Modifier.height(16.dp))
 
-        Button(
+    Row {
+
+        RecipeButton(
+            text = "保存",
+            onClick = onSaveClick
+        )
+
+        Spacer(modifier = Modifier.width(8.dp))
+
+        RecipeButton(
+            text = "戻る",
             onClick = {
-                showBackDialog = true
-            }
-        ) {
-            Text("戻る")
-        }
+                if (hasChanges) {
+                    showBackDialog = true
+                } else {
+                    onBackClick()
+                }
+            },
+            containerColor = Red,
+            contentColor = White
+        )
 
         Spacer(
             modifier = Modifier.weight(1f)

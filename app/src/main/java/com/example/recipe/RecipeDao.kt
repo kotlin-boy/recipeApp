@@ -24,19 +24,19 @@ interface RecipeDao {
     @Query(
         "SELECT * FROM Recipe WHERE id = :recipeId"
     )
-    suspend fun getRecipeById(
-        recipeId: Int
-    ): Recipe?
+    suspend fun getRecipeById(recipeId: Int): Recipe?
 
+    //一件削除
     @Delete
-    suspend fun delete(
-        recipe: Recipe
-    )
+    suspend fun delete(recipe: Recipe)
 
+    //複数削除
+    @Delete
+    suspend fun deleteRecipes(recipes: List<Recipe>)
+
+    //一件更新
     @Update
-    suspend fun update(
-        recipe: Recipe
-    )
+    suspend fun update(recipe: Recipe)
 
     //レシピ取得
     @Query("""
@@ -95,10 +95,15 @@ interface RecipeDao {
         favoriteOnly: Boolean
     ): Flow<List<Recipe>>
 
+    //お気に入り更新
     @Query("""
         UPDATE recipe
         SET isFavorite = :isFavorite
         WHERE id = :id
     """)
     suspend fun updateFavorite(id: Int, isFavorite: Boolean)
+
+    //一括お気に入り更新
+    @Update
+    suspend fun updateRecipes(recipes: List<Recipe>)
 }

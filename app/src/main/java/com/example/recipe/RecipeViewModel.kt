@@ -42,11 +42,12 @@ class RecipeViewModel @Inject constructor(
     var favoriteOnly by mutableStateOf(false)
         private set
 
-    //ソート種類判別用
-    fun updateSortOrder(sortOrder: SortOrder) {
-        this.sortOrder = sortOrder
-        loadRecipes()
-    }
+    //選択モード
+    var isSelectionMode by mutableStateOf(false)
+        private set
+
+    //選択レシピID
+    val selectedIds = mutableStateListOf<Int>()
 
     //初期画面のレシピ
     init {
@@ -114,6 +115,89 @@ class RecipeViewModel @Inject constructor(
     fun toggleFavoriteFilter() {
         favoriteOnly = !favoriteOnly
         loadRecipes()
+    }
+
+    //ソート種類判別用
+    fun updateSortOrder(sortOrder: SortOrder) {
+        this.sortOrder = sortOrder
+        loadRecipes()
+    }
+
+    //選択モードオン
+    fun enterSelectionMode(id: Int) {
+        isSelectionMode = true
+
+        if (!selectedIds.contains(id)) {
+            selectedIds.add(id)
+        }
+    }
+
+    //選択モードオフ
+    fun exitSelectionMode() {
+        selectedIds.clear()
+        isSelectionMode = false
+    }
+
+    //選択モードでのトグル
+    fun toggleSelection(id: Int) {
+        if (selectedIds.contains(id)) {
+            selectedIds.remove(id)
+        } else {
+            selectedIds.add(id)
+        }
+
+        if (selectedIds.isEmpty()) {
+            isSelectionMode = false
+        }
+    }
+
+    //チェックボックス用
+    fun isSelected(id: Int): Boolean {
+        return selectedIds.contains(id)
+    }
+
+    //一括お気に入りオン
+    fun favoriteSelected() {
+        viewModelScope.launch {
+            val updatedRecipes = recipes.value
+                .filter { it.id in selectedIds }
+                .map { recipe ->
+                    recipe.copy(isFavorite = true)
+                }
+
+            repository.updateRecipes(updatedRecipes)
+
+            exitSelectionMode()
+        }
+    }
+
+    //一括お気に入りオフ
+    fun unFavoriteSelected() {
+        viewModelScope.launch {
+
+            val updatedRecipes = recipes.value
+                .filter { it.id in selectedIds }
+                .map { recipe ->
+                    recipe.copy(isFavorite = false)
+                }
+
+            repository.updateRecipes(updatedRecipes)
+
+            exitSelectionMode()
+        }
+    }
+
+    //一括削除
+    fun deleteSelected() {
+        viewModelScope.launch {
+
+            val deleteRecipes = recipes.value
+                .filter { it.id in selectedIds }
+
+            repository.deleteRecipes(deleteRecipes)
+
+            exitSelectionMode()
+        }
     }
 }
 

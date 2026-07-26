@@ -75,7 +75,9 @@ class AddRecipeViewModel @Inject constructor(
 
     //材料削除
     fun removeIngredient(index: Int) {
-        if (ingredients.size > 1) {
+        if (ingredients.size == 1) {
+            ingredients[index] = ""
+        } else {
             ingredients.removeAt(index)
         }
     }
@@ -95,8 +97,11 @@ class AddRecipeViewModel @Inject constructor(
 
     //手順削除
     fun removeStep(index: Int) {
-        if (steps.size > 1)
+        if (steps.size == 1) {
+            steps[index] = ""
+        } else {
             steps.removeAt(index)
+        }
     }
 
     //手順追加
@@ -146,7 +151,8 @@ class AddRecipeViewModel @Inject constructor(
             steps = steps.filter {
                 it.isNotBlank()
             },
-            memo = memo
+            memo = memo,
+            isFavorite = isFavorite
         )
         //DBに挿入　非同期処理
         viewModelScope.launch {
@@ -164,5 +170,15 @@ class AddRecipeViewModel @Inject constructor(
     //お気に入りトグル
     fun toggleFavorite() {
         isFavorite = !isFavorite
+    }
+
+    //変更チェック
+    fun hasChanges(): Boolean {
+        return recipeName.isNotBlank() ||
+                selectedGenre != RecipeGenre.MAIN ||
+                ingredients.any { it.isNotBlank() } ||
+                steps.any { it.isNotBlank() } ||
+                memo.isNotBlank() ||
+                isFavorite
     }
 }

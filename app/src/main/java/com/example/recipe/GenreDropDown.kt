@@ -1,11 +1,15 @@
 package com.example.recipe
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 
 //ジャンルドロップダウン
 @Composable
@@ -20,7 +24,12 @@ fun GenreDropDown(
     Box {
 
         Button(
-            onClick = onExpandClick
+            onClick = onExpandClick,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Orange,
+                contentColor = Color.Black
+            ),
+            shape = RoundedCornerShape(10.dp)
         ) {
             Text(
                 selectedGenre?.displayName ?: "すべて"

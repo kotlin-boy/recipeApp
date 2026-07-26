@@ -14,6 +14,7 @@ class RecipeRepository @Inject constructor(
 
     suspend fun update(recipe: Recipe) {
         recipeDao.update(recipe)
+
     }
 
     suspend fun getRecipeById(id: Int): Recipe? {
@@ -61,5 +62,15 @@ class RecipeRepository @Inject constructor(
         isFavorite: Boolean
     ) {
         recipeDao.updateFavorite(id, isFavorite)
+    }
+
+    //一括削除
+    suspend fun deleteRecipes(recipes: List<Recipe>) {
+        recipeDao.deleteRecipes(recipes)
+    }
+
+    //一括お気に入り更新
+    suspend fun updateRecipes(recipes: List<Recipe>) {
+        recipeDao.updateRecipes(recipes)
     }
 }
