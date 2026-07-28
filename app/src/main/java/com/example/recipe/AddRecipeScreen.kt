@@ -66,10 +66,10 @@ fun AddRecipeScreen(
         ) {
             Text(
                 text = "レシピ追加",
-                fontSize = 36.sp,
+                fontSize = 30.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
-                modifier = Modifier.padding(bottom = 24.dp)
+                modifier = Modifier.padding(bottom = 10.dp)
             )
 
             //レシピ用コンポーズ

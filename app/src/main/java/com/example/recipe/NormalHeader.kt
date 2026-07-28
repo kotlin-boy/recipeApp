@@ -1,7 +1,11 @@
 package com.example.recipe
 
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,6 +20,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarBorder
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun NormalHeader(
@@ -31,7 +39,13 @@ fun NormalHeader(
     var genreExpanded by remember { mutableStateOf(false) }
     var sortExpanded by remember { mutableStateOf(false) }
 
-    Text("レシピ一覧")
+    Text(
+        text = "レシピ一覧",
+        fontSize = 30.sp,
+        fontWeight = FontWeight.Bold,
+        color = Color.Black,
+        modifier = Modifier.padding(bottom = 6.dp)
+    )
 
     OutlinedTextField(
         value = searchKeyword,
@@ -56,6 +70,8 @@ fun NormalHeader(
         }
     )
 
+    Spacer(modifier = Modifier.height(6.dp))
+
     Row {
         GenreDropDown(
             selectedGenre = selectedGenre,
@@ -73,6 +89,8 @@ fun NormalHeader(
             },
             showAllItem = true
         )
+
+        Spacer(modifier = Modifier.width(6.dp))
 
         SortDropDown(
             selectedSort = selectedSort,

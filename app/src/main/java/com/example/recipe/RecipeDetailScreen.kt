@@ -1,11 +1,15 @@
 package com.example.recipe
 
+import android.widget.Space
 import androidx.compose.material3.AlertDialog
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,7 +20,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
@@ -44,64 +50,100 @@ fun RecipeDetailScreen(
         modifier = Modifier
             .fillMaxSize()
             .safeDrawingPadding()
-            .padding(16.dp)
+            .padding(6.dp)
     ) {
         if (viewModel.recipe != null) {
 
             val recipe = viewModel.recipe!!
 
             Text(
-                text = recipe.name
+                text = "レシピ名（${recipe.genre.displayName}）",
+                fontSize = 20.sp,
+                color = Orange,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+
+
+            Text(
+                text = recipe.name,
+                fontSize = 16.sp,
+                modifier = Modifier.padding(bottom = 20.dp)
             )
 
             Text(
-                text = recipe.genre.displayName
+                text = "材料",
+                fontSize = 20.sp,
+                modifier = Modifier.padding(bottom = 4.dp),
+                color = Orange,
+                fontWeight = FontWeight.Bold,
             )
 
-            Text("材料")
             recipe.ingredients.forEach { ingredient ->
 
                 Text(
-                    text = "・$ingredient"
+                    text = "・$ingredient",
+                    fontSize = 16.sp,
+                    modifier = Modifier.padding(bottom = 4.dp)
                 )
 
             }
 
-            Text("手順")
+            Text(
+                text = "手順",
+                fontSize = 20.sp,
+                color = Orange,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .padding(top = 20.dp)
+                    .padding(bottom = 4.dp)
+            )
             recipe.steps.forEachIndexed { index, step ->
 
                 Text(
-                    text = "${index + 1}. $step"
+                    text = "${index + 1}. $step",
+                    fontSize = 16.sp,
+                    modifier = Modifier.padding(bottom = 4.dp)
                 )
 
             }
 
-            Text("メモ")
+            Text(
+                text = "メモ",
+                fontSize = 20.sp,
+                color = Orange,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .padding(top = 30.dp)
+                    .padding(bottom = 4.dp)
+            )
 
             Text(
-                text = recipe.memo
+                text = recipe.memo,
+                fontSize = 16.sp,
+                modifier = Modifier.padding(bottom = 20.dp)
             )
 
             Row {
-
-                Button(
+                RecipeButton(
+                    text = "編集",
                     onClick = {
                         //編集画面へ
                         navController.navigate(
                             "edit_recipe/${recipe.id}"
                         )
                     }
-                ) {
-                    Text("編集")
-                }
+                )
 
-                Button(
+                Spacer(modifier = Modifier.width(4.dp))
+
+
+                RecipeButton(
+                    text = "削除",
                     onClick = {
                         showDeleteDialog = true
                     }
-                ) {
-                    Text("削除")
-                }
+                )
             }
 
         } else {

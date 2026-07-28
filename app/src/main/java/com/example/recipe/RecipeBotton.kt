@@ -29,7 +29,6 @@ fun RecipeButton(
     ) {
         Text(
             text = text,
-            fontWeight = FontWeight.Bold
         )
     }
 }

@@ -17,11 +17,10 @@ fun SortDropDown(
     onSortSelected: (SortOrder) -> Unit,
 ) {
     Box {
-        Button(
+        RecipeButton(
+            text = selectedSort.displayName,
             onClick = onExpandClick
-        ) {
-            Text(selectedSort.displayName)
-        }
+        )
 
         DropdownMenu(
             expanded = expanded,
