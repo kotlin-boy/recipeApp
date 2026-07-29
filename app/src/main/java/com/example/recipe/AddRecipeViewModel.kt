@@ -33,6 +33,10 @@ class AddRecipeViewModel @Inject constructor(
     //メモゾーン
     var memo by mutableStateOf("")
 
+    //画像URI
+    var imageUri by mutableStateOf("")
+        private set
+
     //エラーメッセージ用
     var errorMessage by mutableStateOf<String?>(null)
 
@@ -114,6 +118,16 @@ class AddRecipeViewModel @Inject constructor(
         memo = value
     }
 
+    //画像更新
+    fun updateImageUri(uri: String) {
+        imageUri = uri
+    }
+
+    //画像削除
+    fun removeImage() {
+        imageUri = ""
+    }
+
     //値を格納
     fun saveRecipe() : Boolean{
         //空要素チェック
@@ -152,6 +166,7 @@ class AddRecipeViewModel @Inject constructor(
                 it.isNotBlank()
             },
             memo = memo,
+            imageUri = imageUri,
             isFavorite = isFavorite
         )
         //DBに挿入　非同期処理
@@ -179,6 +194,7 @@ class AddRecipeViewModel @Inject constructor(
                 ingredients.any { it.isNotBlank() } ||
                 steps.any { it.isNotBlank() } ||
                 memo.isNotBlank() ||
+                imageUri.isNotBlank() ||
                 isFavorite
     }
 }

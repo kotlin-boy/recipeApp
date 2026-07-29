@@ -22,6 +22,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import androidx.compose.foundation.layout.fillMaxWidth
 
 @Composable
 fun RecipeForm(
@@ -47,6 +49,10 @@ fun RecipeForm(
     onSaveClick: () -> Unit,
     onBackClick: () -> Unit,
     hasChanges: Boolean,
+    onImageSelectClick: () -> Unit,
+    onRotateImageClick: () -> Unit,
+    onDeleteImageClick: () -> Unit,
+    imageUri: String,
 ){
 
     var showBackDialog by remember {
@@ -162,6 +168,43 @@ fun RecipeForm(
         },
         minLines = 5
     )
+
+    Spacer(modifier = Modifier.height(16.dp))
+
+    //画像選択
+    Text("画像")
+    Row {
+        RecipeButton(
+            text = "画像を選択",
+            onClick = onImageSelectClick
+        )
+
+        Spacer(modifier = Modifier.width(8.dp))
+
+        RecipeButton(
+            text = "↻",
+            onClick = onRotateImageClick
+        )
+
+        Spacer(modifier = Modifier.width(8.dp))
+
+        RecipeButton(
+            text = "削除",
+            onClick = onDeleteImageClick
+        )
+    }
+
+    Spacer(modifier = Modifier.height(8.dp))
+
+    if (imageUri.isNotBlank()) {
+        AsyncImage(
+            model = imageUri,
+            contentDescription = "レシピ画像",
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+        )
+    }
 
     Spacer(modifier = Modifier.height(16.dp))
 

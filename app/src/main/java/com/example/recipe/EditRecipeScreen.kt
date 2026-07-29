@@ -1,5 +1,7 @@
 package com.example.recipe
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,6 +36,15 @@ fun EditRecipeScreen(
     //戻る確認ダイアログ用
     var showBackDialog by remember {
         mutableStateOf(false)
+    }
+
+    //画像選択用
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri ->
+        uri?.let {
+            viewModel.updateImageUri(it.toString())
+        }
     }
 
     LaunchedEffect(recipeId){
@@ -96,7 +107,17 @@ fun EditRecipeScreen(
             onBackClick = {
                 navController.popBackStack()
             },
-            hasChanges = viewModel.hasChanges()
+            hasChanges = viewModel.hasChanges(),
+            onImageSelectClick = {
+                imagePickerLauncher.launch("image/*")
+            },
+            onRotateImageClick = {
+                //回転機能実装予定
+            },
+            onDeleteImageClick = {
+                viewModel.removeImage()
+            },
+            imageUri = viewModel.imageUri,
         )
     }
 }

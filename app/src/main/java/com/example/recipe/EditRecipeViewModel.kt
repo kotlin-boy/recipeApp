@@ -37,6 +37,10 @@ class EditRecipeViewModel @Inject constructor(
     //メモゾーン
     var memo by mutableStateOf("")
 
+    //画像URI
+    var imageUri by mutableStateOf("")
+        private set
+
     //お気に入り状態
     var isFavorite by mutableStateOf(false)
         private set
@@ -74,7 +78,9 @@ class EditRecipeViewModel @Inject constructor(
 
     //材料削除
     fun removeIngredient(index: Int) {
-        if (ingredients.size > 1) {
+        if (ingredients.size == 1) {
+            ingredients[index] = ""
+        } else {
             ingredients.removeAt(index)
         }
     }
@@ -94,8 +100,11 @@ class EditRecipeViewModel @Inject constructor(
 
     //手順削除
     fun removeStep(index: Int) {
-        if (steps.size > 1)
+        if (steps.size == 1) {
+            steps[index] = ""
+        } else {
             steps.removeAt(index)
+        }
     }
 
     //手順追加
@@ -108,6 +117,17 @@ class EditRecipeViewModel @Inject constructor(
         memo = value
     }
 
+    //画像更新
+    fun updateImageUri(uri: String) {
+        imageUri = uri
+    }
+
+    //画像削除
+    fun removeImage() {
+        imageUri = ""
+    }
+
+
     //値を格納
     fun updateRecipe() {
         val recipe = Recipe(
@@ -117,7 +137,8 @@ class EditRecipeViewModel @Inject constructor(
             ingredients = ingredients.toList(),
             steps = steps.toList(),
             memo = memo,
-            isFavorite = isFavorite
+            isFavorite = isFavorite,
+            imageUri = imageUri,
         )
         //DBに挿入　非同期処理
         viewModelScope.launch {
@@ -143,6 +164,7 @@ class EditRecipeViewModel @Inject constructor(
 
             memo = recipe.memo
             isFavorite = recipe.isFavorite
+            imageUri = recipe.imageUri
         }
     }
 
@@ -160,6 +182,7 @@ class EditRecipeViewModel @Inject constructor(
                 ingredients.toList() != original.ingredients ||
                 steps.toList() != original.steps ||
                 memo != original.memo ||
+                imageUri != original.imageUri ||
                 isFavorite != original.isFavorite
     }
 }
