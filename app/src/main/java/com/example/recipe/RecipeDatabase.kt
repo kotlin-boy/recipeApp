@@ -8,7 +8,7 @@ import androidx.room.TypeConverters
 
 @Database(
     entities = [Recipe::class],
-    version = 2
+    version = 3
 )
 @TypeConverters(
     Converters::class

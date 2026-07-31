@@ -60,7 +60,9 @@ fun RecipeViewScreen(
                 selectedSort = viewModel.sortOrder,
                 onSortSelected = viewModel::updateSortOrder,
                 favoriteOnly = viewModel.favoriteOnly,
-                onFavoriteClick = viewModel::toggleFavoriteFilter
+                onFavoriteClick = viewModel::toggleFavoriteFilter,
+                showImage = viewModel.showImage,
+                onShowImageClick = viewModel::toggleShowImage
             )
         }
         LazyVerticalGrid(
@@ -84,7 +86,8 @@ fun RecipeViewScreen(
                         },
                         onLongClick = {
                             viewModel.enterSelectionMode(recipe.id)
-                        }
+                        },
+                        showImage = viewModel.showImage
                     )
             }
         }

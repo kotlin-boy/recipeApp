@@ -24,6 +24,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun RecipeForm(
@@ -179,19 +183,26 @@ fun RecipeForm(
             onClick = onImageSelectClick
         )
 
-        Spacer(modifier = Modifier.width(8.dp))
+        if (imageUri.isNotBlank()) {
 
-        RecipeButton(
-            text = "↻",
-            onClick = onRotateImageClick
-        )
+            Spacer(modifier = Modifier.width(8.dp))
 
-        Spacer(modifier = Modifier.width(8.dp))
+            RecipeButton(
+                text = "↻",
+                onClick = onRotateImageClick,
+                containerColor = Black,
+                contentColor = White,
+            )
 
-        RecipeButton(
-            text = "削除",
-            onClick = onDeleteImageClick
-        )
+            Spacer(modifier = Modifier.width(8.dp))
+
+            RecipeButton(
+                text = "削除",
+                onClick = onDeleteImageClick,
+                containerColor = Red,
+                contentColor = White
+            )
+        }
     }
 
     Spacer(modifier = Modifier.height(8.dp))
@@ -203,6 +214,8 @@ fun RecipeForm(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
+                .clip(RoundedCornerShape(8.dp)),
+            contentScale = ContentScale.FillBounds
         )
     }
 

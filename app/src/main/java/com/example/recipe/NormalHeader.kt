@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.material.icons.filled.Image
 
 @Composable
 fun NormalHeader(
@@ -34,7 +35,9 @@ fun NormalHeader(
     selectedSort: SortOrder,
     onSortSelected: (SortOrder) -> Unit,
     favoriteOnly: Boolean,
-    onFavoriteClick: () -> Unit
+    onFavoriteClick: () -> Unit,
+    showImage: Boolean,
+    onShowImageClick: () -> Unit
 ) {
     var genreExpanded by remember { mutableStateOf(false) }
     var sortExpanded by remember { mutableStateOf(false) }
@@ -108,6 +111,8 @@ fun NormalHeader(
             }
         )
 
+        Spacer(modifier = Modifier.width(10.dp))
+
         IconButton(
             onClick = onFavoriteClick
         ) {
@@ -118,6 +123,20 @@ fun NormalHeader(
                     else
                         Icons.Default.StarBorder,
                 contentDescription = "お気に入り"
+            )
+        }
+
+        IconButton(
+            onClick = onShowImageClick
+        ) {
+            Icon(
+                imageVector = Icons.Default.Image,
+                contentDescription = "画像表示",
+                tint =
+                    if (showImage)
+                        Color.Blue
+                    else
+                        Color.Gray
             )
         }
     }

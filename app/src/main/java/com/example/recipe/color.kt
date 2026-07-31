@@ -7,3 +7,4 @@ val DarkOrange = Color(0xFFE65100)
 val Cream = Color(0xFFFFFBF5)
 val Red = Color.Red
 val White = Color.White
+val Black = Color.Black

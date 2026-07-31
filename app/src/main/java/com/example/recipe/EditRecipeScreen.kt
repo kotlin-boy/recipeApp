@@ -17,6 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -37,6 +38,9 @@ fun EditRecipeScreen(
     var showBackDialog by remember {
         mutableStateOf(false)
     }
+
+    //アプリ状態
+    val context = LocalContext.current
 
     //画像選択用
     val imagePickerLauncher = rememberLauncherForActivityResult(
@@ -112,7 +116,13 @@ fun EditRecipeScreen(
                 imagePickerLauncher.launch("image/*")
             },
             onRotateImageClick = {
-                //回転機能実装予定
+                if (viewModel.imageUri.isNotBlank()) {
+                    val newUri = ImageUtils.rotateImage(
+                        context,
+                        viewModel.imageUri
+                    )
+                    viewModel.updateImageUri(newUri)
+                }
             },
             onDeleteImageClick = {
                 viewModel.removeImage()

@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.compose.ui.platform.LocalFocusManager
@@ -29,6 +30,9 @@ fun AddRecipeScreen(
 ) {
     //フォーカス解除用
     val focusManager = LocalFocusManager.current
+
+    //アプリ状態
+    val context = LocalContext.current
 
     //ViewModel
     val viewModel: AddRecipeViewModel = hiltViewModel()
@@ -128,7 +132,13 @@ fun AddRecipeScreen(
                     imagePickerLauncher.launch("image/*")
                 },
                 onRotateImageClick = {
-                    //回転機能実装予定
+                    if (viewModel.imageUri.isNotBlank()) {
+                        val newUri = ImageUtils.rotateImage(
+                            context,
+                            viewModel.imageUri
+                        )
+                        viewModel.updateImageUri(newUri)
+                    }
                 },
                 onDeleteImageClick = {
                     viewModel.removeImage()

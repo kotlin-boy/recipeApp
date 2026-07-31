@@ -49,6 +49,10 @@ class RecipeViewModel @Inject constructor(
     //選択レシピID
     val selectedIds = mutableStateListOf<Int>()
 
+    //写真表示状態
+    var showImage by mutableStateOf(false)
+        private set
+
     //初期画面のレシピ
     init {
         loadRecipes()
@@ -198,6 +202,11 @@ class RecipeViewModel @Inject constructor(
 
             exitSelectionMode()
         }
+    }
+
+    //写真表示状態
+    fun toggleShowImage() {
+        showImage = !showImage
     }
 }
 

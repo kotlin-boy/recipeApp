@@ -26,6 +26,11 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
+import coil.compose.AsyncImage
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.layout.fillMaxWidth
 
 @Composable
 fun RecipeDetailScreen(
@@ -123,6 +128,20 @@ fun RecipeDetailScreen(
                 fontSize = 16.sp,
                 modifier = Modifier.padding(bottom = 20.dp)
             )
+
+            if (recipe.imageUri.isNotBlank()) {
+                AsyncImage(
+                    model = recipe.imageUri,
+                    contentDescription = recipe.name,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.FillBounds
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+            }
 
             Row {
                 RecipeButton(
