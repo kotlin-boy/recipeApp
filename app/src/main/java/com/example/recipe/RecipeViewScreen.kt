@@ -1,7 +1,10 @@
 package com.example.recipe
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.Text
@@ -102,27 +105,36 @@ fun RecipeViewScreen(
                     Text("確認")
                 },
                 text = {
-                    Text("${viewModel.selectedIds.size}件のレシピを削除しますか？")
-                },
-                confirmButton = {
-                    TextButton(
-                        onClick = {
-                            viewModel.deleteSelected()
-                            showDeleteDialog = false
-                        }
-                    ) {
-                        Text("削除")
+                    Column {
+
+                        Text("${viewModel.selectedIds.size}件のレシピを削除しますか？")
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        RecipeButton(
+                            text = "削除",
+                            onClick = {
+                                viewModel.deleteSelected()
+                                showDeleteDialog = false
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                            containerColor = Red,
+                            contentColor = White
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        RecipeButton(
+                            text = "キャンセル",
+                            onClick = {
+                                showDeleteDialog = false
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        )
                     }
                 },
-                dismissButton = {
-                    TextButton(
-                        onClick = {
-                            showDeleteDialog = false
-                        }
-                    ) {
-                        Text("キャンセル")
-                    }
-                }
+                confirmButton = {},
+                dismissButton = {}
             )
         }
     }

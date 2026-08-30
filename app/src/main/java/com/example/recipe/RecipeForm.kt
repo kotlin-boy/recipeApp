@@ -1,5 +1,6 @@
 package com.example.recipe
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
@@ -20,14 +21,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.text.SpanStyle
 
 @Composable
 fun RecipeForm(
@@ -63,6 +67,8 @@ fun RecipeForm(
         mutableStateOf(false)
     }
 
+    var showImageDialog by remember { mutableStateOf(false) }
+
     OutlinedTextField(
         value = recipeName,
         onValueChange = onRecipeNameChange,
@@ -83,7 +89,11 @@ fun RecipeForm(
     Spacer(modifier = Modifier.height(16.dp))
 
     //材料の記載・追加
-    Text("材料")
+    Text(
+        text = "材料",
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Bold,
+    )
     ingredients.forEachIndexed { index, ingredient ->
         Row {
             //材料欄
@@ -122,7 +132,11 @@ fun RecipeForm(
     Spacer(modifier = Modifier.height(16.dp))
 
     //手順の記載・追加
-    Text("作り方")
+    Text(
+        text = "作り方",
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Bold,
+    )
     steps.forEachIndexed { index, step ->
 
         Row {
@@ -163,7 +177,11 @@ fun RecipeForm(
     Spacer(modifier = Modifier.height(16.dp))
 
     //メモゾーン
-    Text("メモ")
+    Text(
+        text = "メモ",
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Bold,
+    )
     OutlinedTextField(
         value = memo,
         onValueChange = onMemoValueChange,
@@ -176,11 +194,25 @@ fun RecipeForm(
     Spacer(modifier = Modifier.height(16.dp))
 
     //画像選択
-    Text("画像")
+    Text(
+        text = buildAnnotatedString {
+            append("画像　")
+
+            withStyle(
+                style = SpanStyle(color = Red)
+            ) {
+                append("※横向き推奨")
+            }
+        },
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Bold,
+    )
     Row {
         RecipeButton(
             text = "画像を選択",
-            onClick = onImageSelectClick
+            onClick = {
+                showImageDialog = true
+            }
         )
 
         if (imageUri.isNotBlank()) {
@@ -270,27 +302,74 @@ fun RecipeForm(
                 Text("確認")
             },
             text = {
-                Text("入力内容は保存されません。\n戻りますか？")
-            },
-            confirmButton = {
-                Button(
-                    onClick = {
-                        showBackDialog = false
-                        onBackClick()
-                    }
-                ) {
-                    Text("戻る")
+                Column {
+
+                    Text("入力内容は保存されません。\n戻りますか？")
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    RecipeButton(
+                        text = "戻る",
+                        onClick = {
+                            showBackDialog = false
+                            onBackClick()
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        containerColor = Red,
+                        contentColor = White
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    RecipeButton(
+                        text = "キャンセル",
+                        onClick = {
+                            showBackDialog = false
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 }
             },
-            dismissButton = {
-                Button(
-                    onClick = {
-                        showBackDialog = false
-                    }
-                ) {
-                    Text("キャンセル")
+            confirmButton = {},
+            dismissButton = {}
+        )
+    }
+
+    //画像選択
+    if (showImageDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                showImageDialog = false
+            },
+            title = {
+                Text("画像を追加")
+            },
+            text = {
+                Column {
+
+                    RecipeButton(
+                        text = "写真を撮る",
+                        onClick = {
+                            showImageDialog = false
+                            // 後でカメラ起動
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    RecipeButton(
+                        text = "アルバムから選ぶ",
+                        onClick = {
+                            showImageDialog = false
+                            onImageSelectClick()
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 }
-            }
+            },
+            confirmButton = {},
+            dismissButton = {}
         )
     }
 }
