@@ -1,5 +1,6 @@
 package com.example.recipe
 
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
@@ -53,6 +54,23 @@ fun EditRecipeScreen(
             viewModel.updateImageUri(it.toString())
         }
     }
+
+    // 撮影画像URI
+    var cameraImageUri by remember {
+        mutableStateOf(Uri.EMPTY)
+    }
+
+    // カメラ起動
+    val cameraLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.TakePicture()
+        ) { success ->
+            if (success) {
+                viewModel.updateImageUri(
+                    cameraImageUri.toString()
+                )
+            }
+        }
 
     LaunchedEffect(recipeId){
         viewModel.loadRecipe(recipeId)
@@ -123,6 +141,10 @@ fun EditRecipeScreen(
             hasChanges = viewModel.hasChanges(),
             onImageSelectClick = {
                 imagePickerLauncher.launch("image/*")
+            },
+            onTakePhotoClick = {
+                cameraImageUri = ImageUtils.createImageUri(context)
+                cameraLauncher.launch(cameraImageUri)
             },
             onRotateImageClick = {
                 if (viewModel.imageUri.isNotBlank()) {

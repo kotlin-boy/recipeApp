@@ -58,6 +58,7 @@ fun RecipeForm(
     onBackClick: () -> Unit,
     hasChanges: Boolean,
     onImageSelectClick: () -> Unit,
+    onTakePhotoClick: () -> Unit,
     onRotateImageClick: () -> Unit,
     onDeleteImageClick: () -> Unit,
     imageUri: String,
@@ -67,7 +68,9 @@ fun RecipeForm(
         mutableStateOf(false)
     }
 
-    var showImageDialog by remember { mutableStateOf(false) }
+    var showImageDialog by remember {
+        mutableStateOf(false)
+    }
 
     OutlinedTextField(
         value = recipeName,
@@ -346,12 +349,11 @@ fun RecipeForm(
             },
             text = {
                 Column {
-
                     RecipeButton(
                         text = "写真を撮る",
                         onClick = {
                             showImageDialog = false
-                            // 後でカメラ起動
+                            onTakePhotoClick()
                         },
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -359,7 +361,7 @@ fun RecipeForm(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     RecipeButton(
-                        text = "アルバムから選ぶ",
+                        text = "ストレージから選択",
                         onClick = {
                             showImageDialog = false
                             onImageSelectClick()

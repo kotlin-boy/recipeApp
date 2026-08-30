@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import android.net.Uri
 
 @Composable
 fun AddRecipeScreen(
@@ -41,11 +42,6 @@ fun AddRecipeScreen(
         SnackbarHostState()
     }
 
-    //戻る確認ダイアログ用
-    var showBackDialog by remember {
-        mutableStateOf(false)
-    }
-
     //画像選択用
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -54,6 +50,23 @@ fun AddRecipeScreen(
             viewModel.updateImageUri(it.toString())
         }
     }
+
+    // 撮影画像URI
+    var cameraImageUri by remember {
+        mutableStateOf(Uri.EMPTY)
+    }
+
+    // カメラ起動
+    val cameraLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.TakePicture()
+        ) { success ->
+            if (success) {
+                viewModel.updateImageUri(
+                    cameraImageUri.toString()
+                )
+            }
+        }
 
     LaunchedEffect(viewModel.errorMessage) {
         val message = viewModel.errorMessage ?: return@LaunchedEffect
@@ -130,6 +143,10 @@ fun AddRecipeScreen(
                 hasChanges = viewModel.hasChanges(),
                 onImageSelectClick = {
                     imagePickerLauncher.launch("image/*")
+                },
+                onTakePhotoClick = {
+                    cameraImageUri = ImageUtils.createImageUri(context)
+                    cameraLauncher.launch(cameraImageUri)
                 },
                 onRotateImageClick = {
                     if (viewModel.imageUri.isNotBlank()) {

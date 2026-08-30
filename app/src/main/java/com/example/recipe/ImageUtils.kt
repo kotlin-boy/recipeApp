@@ -9,6 +9,7 @@ import android.provider.MediaStore
 import android.graphics.Matrix
 import java.io.File
 import java.io.FileOutputStream
+import androidx.core.content.FileProvider
 
 //画像の回転
 object ImageUtils {
@@ -71,5 +72,22 @@ object ImageUtils {
         //uriの取得
         val newUri = Uri.fromFile(file)
         return newUri.toString()
+    }
+
+    //撮影画像のURI作成
+    fun createImageUri(
+        context: Context
+    ): Uri {
+
+        val file = File(
+            context.cacheDir,
+            "camera_image_${System.currentTimeMillis()}.jpg"
+        )
+
+        return FileProvider.getUriForFile(
+            context,
+            "${context.packageName}.fileprovider",
+            file
+        )
     }
 }
