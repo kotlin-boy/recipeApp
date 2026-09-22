@@ -74,11 +74,6 @@ Google Play:
 - ソート機能
 - お気に入り登録
 
-### アーキテクチャ
-- Room Databaseによるローカル保存
-- Hiltを利用した依存性注入
-- MVVMアーキテクチャ
-
 ## 工夫した点
 
 ### 保守性・再利用性
@@ -100,8 +95,28 @@ Google Play:
 - キーワード検索・ジャンル検索・ソート機能を実装
 - 複数選択による一括お気に入り・削除に対応
 
-## 今後の改善予定
+## アーキテクチャ・設計
 
+### MVVM構成
+
+MVVMアーキテクチャを採用し、UI・状態管理・データアクセスの責務を分離しています。
+
+- Presentation Layer：Jetpack ComposeによるUI表示
+- ViewModel Layer：UI状態管理・入力チェック
+- Repository Layer：データアクセス処理の仲介
+- Data Layer：Roomによるローカルデータ管理
+- Hilt：ViewModel・Repository・Databaseなどの依存関係を管理
+
+![MVVM Architecture](docs/images/MVVM.png)
+
+### 画面遷移
+
+ホーム画面を起点として、レシピの追加・一覧表示・詳細表示・編集を行います。
+
+![Screen Flow](docs/images/ScreenFlow.png)
+
+## 今後の改善予定
+- カレンダーでの食事記録
 - 材料でのレシピ検索
 - タグ機能
 - UI/UX改善
