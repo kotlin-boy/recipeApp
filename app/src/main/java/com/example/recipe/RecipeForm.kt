@@ -297,81 +297,82 @@ fun RecipeForm(
     }
 
     if (showBackDialog) {
-        AlertDialog(
+        CommonDialog(
+            title = "確認",
+            message = {
+                Text("入力内容は保存されません。\n戻りますか？")
+            },
+            buttons = {
+                Spacer(modifier = Modifier.height(16.dp))
+
+                RecipeButton(
+                    text = "戻る",
+                    onClick = {
+                        showBackDialog = false
+                        onBackClick()
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    containerColor = Red,
+                    contentColor = White
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                RecipeButton(
+                    text = "キャンセル",
+                    onClick = {
+                        showBackDialog = false
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            },
             onDismissRequest = {
                 showBackDialog = false
-            },
-            title = {
-                Text("確認")
-            },
-            text = {
-                Column {
-
-                    Text("入力内容は保存されません。\n戻りますか？")
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    RecipeButton(
-                        text = "戻る",
-                        onClick = {
-                            showBackDialog = false
-                            onBackClick()
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        containerColor = Red,
-                        contentColor = White
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    RecipeButton(
-                        text = "キャンセル",
-                        onClick = {
-                            showBackDialog = false
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-            },
-            confirmButton = {},
-            dismissButton = {}
+            }
         )
     }
 
     //画像選択
     if (showImageDialog) {
-        AlertDialog(
+        CommonDialog(
+            title = "画像を追加",
+            buttons = {
+
+                RecipeButton(
+                    text = "写真を撮る",
+                    onClick = {
+                        showImageDialog = false
+                        onTakePhotoClick()
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                RecipeButton(
+                    text = "ストレージから選択",
+                    onClick = {
+                        showImageDialog = false
+                        onImageSelectClick()
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                RecipeButton(
+                    text = "キャンセル",
+                    onClick = {
+                        showImageDialog = false
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    containerColor = Red,
+                    contentColor = White
+                )
+            },
             onDismissRequest = {
                 showImageDialog = false
-            },
-            title = {
-                Text("画像を追加")
-            },
-            text = {
-                Column {
-                    RecipeButton(
-                        text = "写真を撮る",
-                        onClick = {
-                            showImageDialog = false
-                            onTakePhotoClick()
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    RecipeButton(
-                        text = "ストレージから選択",
-                        onClick = {
-                            showImageDialog = false
-                            onImageSelectClick()
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-            },
-            confirmButton = {},
-            dismissButton = {}
+            }
         )
     }
 }

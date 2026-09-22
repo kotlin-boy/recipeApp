@@ -1,0 +1,67 @@
+<mxfile host="Electron">
+  <diagram name="ページ-1" id="Td2VU8PQmLI-WIPQVHVh">
+    <mxGraphModel dx="1414" dy="841" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="-P3L2BCnWJa4zFfcRo3X-5" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="Presentation Layer" vertex="1">
+          <mxGeometry height="190" width="270" x="130" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="-P3L2BCnWJa4zFfcRo3X-6" parent="-P3L2BCnWJa4zFfcRo3X-5" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="&lt;div&gt;&lt;pre dir=&quot;ltr&quot;&gt;&lt;code&gt;Home&lt;br&gt;AddRecipe&lt;br&gt;RecipeView&lt;br&gt;RecipeDetail&lt;br&gt;EditRecipe&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="100" width="270" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="-P3L2BCnWJa4zFfcRo3X-9" parent="-P3L2BCnWJa4zFfcRo3X-5" style="rounded=0;whiteSpace=wrap;html=1;" value="Compose UI&lt;div&gt;collectAsState()&lt;/div&gt;&lt;div&gt;↓&lt;/div&gt;&lt;div&gt;StateFlow&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="270" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="-P3L2BCnWJa4zFfcRo3X-10" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="&lt;pre dir=&quot;ltr&quot;&gt;&lt;code&gt;ViewModel Layer &lt;/code&gt;&lt;/pre&gt;" vertex="1">
+          <mxGeometry height="180" width="270" x="130" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="-P3L2BCnWJa4zFfcRo3X-11" parent="-P3L2BCnWJa4zFfcRo3X-10" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="&lt;pre dir=&quot;ltr&quot;&gt;&lt;code&gt;&lt;pre dir=&quot;ltr&quot;&gt;&lt;code&gt;AddRecipeViewModel&lt;br&gt;&lt;/code&gt;RecipeViewModel                                                   &lt;br&gt;RecipeDetailViewModel                                                &lt;br&gt;EditRecipeViewModel                                                  &lt;/pre&gt;&lt;/code&gt;&lt;/pre&gt;" vertex="1">
+          <mxGeometry height="80" width="270" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="-P3L2BCnWJa4zFfcRo3X-12" parent="-P3L2BCnWJa4zFfcRo3X-10" style="rounded=0;whiteSpace=wrap;html=1;" value="UI状態管理&lt;div&gt;入力チェック&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="270" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="-P3L2BCnWJa4zFfcRo3X-23" edge="1" parent="-P3L2BCnWJa4zFfcRo3X-10" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="-P3L2BCnWJa4zFfcRo3X-10" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="134.5" y="-30" as="sourcePoint" />
+            <mxPoint x="134.5" y="40" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-P3L2BCnWJa4zFfcRo3X-13" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="&lt;pre dir=&quot;ltr&quot;&gt;&lt;code&gt;Repository Layer &lt;/code&gt;&lt;/pre&gt;" vertex="1">
+          <mxGeometry height="150" width="270" x="130" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="-P3L2BCnWJa4zFfcRo3X-14" parent="-P3L2BCnWJa4zFfcRo3X-13" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="&lt;pre dir=&quot;ltr&quot;&gt;&lt;code&gt;&lt;pre dir=&quot;ltr&quot;&gt;RecipeRepository                                                                                       &lt;/pre&gt;&lt;/code&gt;&lt;/pre&gt;" vertex="1">
+          <mxGeometry height="40" width="270" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="-P3L2BCnWJa4zFfcRo3X-15" parent="-P3L2BCnWJa4zFfcRo3X-13" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;pre dir=&quot;ltr&quot;&gt;&lt;code&gt;CRUD&lt;br&gt;&lt;/code&gt;検索&lt;br&gt;お気に入り&lt;br&gt;↓&lt;br&gt;Flow&amp;lt;List&amp;lt;Recipe&amp;gt;&amp;gt;&lt;/pre&gt;" vertex="1">
+          <mxGeometry height="80" width="270" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="-P3L2BCnWJa4zFfcRo3X-16" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="&lt;pre dir=&quot;ltr&quot;&gt;&lt;code&gt;Data Layer &lt;/code&gt;&lt;/pre&gt;" vertex="1">
+          <mxGeometry height="130" width="270" x="130" y="630" as="geometry" />
+        </mxCell>
+        <mxCell id="-P3L2BCnWJa4zFfcRo3X-17" parent="-P3L2BCnWJa4zFfcRo3X-16" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="&lt;pre dir=&quot;ltr&quot;&gt;&lt;code&gt;&lt;pre dir=&quot;ltr&quot;&gt;RecipeDao&lt;br&gt;↓&lt;br&gt;RecipeDatabase (Room)&lt;br&gt;↓&lt;br&gt;Recipe Entity&lt;/pre&gt;&lt;/code&gt;&lt;/pre&gt;" vertex="1">
+          <mxGeometry height="100" width="270" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="-P3L2BCnWJa4zFfcRo3X-19" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="&lt;pre dir=&quot;ltr&quot;&gt;&lt;code&gt;Hilt&lt;/code&gt;&lt;/pre&gt;" vertex="1">
+          <mxGeometry height="110" width="270" x="440" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="-P3L2BCnWJa4zFfcRo3X-20" parent="-P3L2BCnWJa4zFfcRo3X-19" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="&lt;pre dir=&quot;ltr&quot;&gt;&lt;code&gt;&lt;pre dir=&quot;ltr&quot;&gt;&lt;pre dir=&quot;ltr&quot;&gt;&lt;code&gt;@HiltAndroidApp&lt;br&gt;&lt;/code&gt;DatabaseModule&lt;/pre&gt;Dependency Injection&lt;/pre&gt;&lt;/code&gt;&lt;/pre&gt;" vertex="1">
+          <mxGeometry height="80" width="270" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="-P3L2BCnWJa4zFfcRo3X-25" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="-P3L2BCnWJa4zFfcRo3X-13" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="264.5" y="420" as="sourcePoint" />
+            <mxPoint x="264.5" y="490" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-P3L2BCnWJa4zFfcRo3X-26" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="-P3L2BCnWJa4zFfcRo3X-16" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="264.5" y="600" as="sourcePoint" />
+            <mxPoint x="265" y="650" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

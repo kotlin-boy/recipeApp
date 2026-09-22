@@ -179,47 +179,41 @@ fun RecipeDetailScreen(
         }
     }
     if (showDeleteDialog) {
-        AlertDialog(
+        CommonDialog(
+            title = "削除の確認",
+            message = {
+                Text("このレシピを削除しますか？")
+            },
             onDismissRequest = {
                 showDeleteDialog = false
             },
-            title = {
-                Text("削除の確認")
-            },
-            text = {
-                Column {
+            buttons = {
+                Spacer(modifier = Modifier.height(16.dp))
 
-                    Text("このレシピを削除しますか？")
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    RecipeButton(
-                        text = "削除",
-                        onClick = {
-                            scope.launch {
-                                showDeleteDialog = false
-                                viewModel.deleteRecipe()
-                                navController.popBackStack()
-                            }
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        containerColor = Red,
-                        contentColor = White
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    RecipeButton(
-                        text = "キャンセル",
-                        onClick = {
+                RecipeButton(
+                    text = "削除",
+                    onClick = {
+                        scope.launch {
                             showDeleteDialog = false
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-            },
-            confirmButton = {},
-            dismissButton = {}
+                            viewModel.deleteRecipe()
+                            navController.popBackStack()
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    containerColor = Red,
+                    contentColor = White
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                RecipeButton(
+                    text = "キャンセル",
+                    onClick = {
+                        showDeleteDialog = false
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         )
     }
 }

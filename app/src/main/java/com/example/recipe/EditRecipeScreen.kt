@@ -38,11 +38,6 @@ fun EditRecipeScreen(
     //ViewModel
     val viewModel: EditRecipeViewModel = hiltViewModel()
 
-    //戻る確認ダイアログ用
-    var showBackDialog by remember {
-        mutableStateOf(false)
-    }
-
     //アプリ状態
     val context = LocalContext.current
 

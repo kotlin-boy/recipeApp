@@ -21,8 +21,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.TextButton
 
 @Composable
 fun RecipeViewScreen(
@@ -97,44 +95,38 @@ fun RecipeViewScreen(
 
         //削除ダイアログ
         if (showDeleteDialog) {
-            AlertDialog(
+            CommonDialog(
+                title = "確認",
+                message = {
+                    Text("${viewModel.selectedIds.size}件のレシピを削除しますか？")
+                },
                 onDismissRequest = {
                     showDeleteDialog = false
                 },
-                title = {
-                    Text("確認")
-                },
-                text = {
-                    Column {
+                buttons = {
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                        Text("${viewModel.selectedIds.size}件のレシピを削除しますか？")
+                    RecipeButton(
+                        text = "削除",
+                        onClick = {
+                            viewModel.deleteSelected()
+                            showDeleteDialog = false
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        containerColor = Red,
+                        contentColor = White
+                    )
 
-                        Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
-                        RecipeButton(
-                            text = "削除",
-                            onClick = {
-                                viewModel.deleteSelected()
-                                showDeleteDialog = false
-                            },
-                            modifier = Modifier.fillMaxWidth(),
-                            containerColor = Red,
-                            contentColor = White
-                        )
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        RecipeButton(
-                            text = "キャンセル",
-                            onClick = {
-                                showDeleteDialog = false
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
-                },
-                confirmButton = {},
-                dismissButton = {}
+                    RecipeButton(
+                        text = "キャンセル",
+                        onClick = {
+                            showDeleteDialog = false
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             )
         }
     }

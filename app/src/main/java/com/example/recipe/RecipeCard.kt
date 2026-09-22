@@ -1,5 +1,6 @@
 package com.example.recipe
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
@@ -29,6 +30,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.draw.clip
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun RecipeCard(
     recipe: Recipe,
