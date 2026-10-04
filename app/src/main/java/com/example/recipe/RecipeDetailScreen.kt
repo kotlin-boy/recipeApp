@@ -51,133 +51,154 @@ fun RecipeDetailScreen(
         viewModel.loadRecipe(recipeId)
     }
 
-    LazyColumn(
+    val recipe = viewModel.recipe
+
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .safeDrawingPadding()
             .padding(6.dp)
     ) {
-        item {
-            if (viewModel.recipe != null) {
 
-                val recipe = viewModel.recipe!!
+        LazyColumn(
+            modifier = Modifier
+                .weight(1f)
+        ) {
+            item {
+                if (viewModel.recipe != null) {
 
-                Text(
-                    text = "レシピ名（${recipe.genre.displayName}）",
-                    fontSize = 26.sp,
-                    color = Orange,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 4.dp)
-                )
-
-
-                Text(
-                    text = recipe.name,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 20.dp)
-                )
-
-                Text(
-                    text = "材料",
-                    fontSize = 20.sp,
-                    modifier = Modifier.padding(bottom = 4.dp),
-                    color = Orange,
-                    fontWeight = FontWeight.Bold,
-                )
-
-                recipe.ingredients.forEach { ingredient ->
+                    val recipe = viewModel.recipe!!
 
                     Text(
-                        text = "・$ingredient",
-                        fontSize = 16.sp,
+                        text = "レシピ名（${recipe.genre.displayName}）",
+                        fontSize = 26.sp,
+                        color = Orange,
+                        fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(bottom = 4.dp)
                     )
 
-                }
-
-                Text(
-                    text = "手順",
-                    fontSize = 20.sp,
-                    color = Orange,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .padding(top = 20.dp)
-                        .padding(bottom = 4.dp)
-                )
-                recipe.steps.forEachIndexed { index, step ->
 
                     Text(
-                        text = "${index + 1}. $step",
-                        fontSize = 16.sp,
-                        modifier = Modifier.padding(bottom = 4.dp)
+                        text = recipe.name,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(bottom = 20.dp)
                     )
 
-                }
+                    Text(
+                        text = "材料",
+                        fontSize = 20.sp,
+                        modifier = Modifier.padding(bottom = 4.dp),
+                        color = Orange,
+                        fontWeight = FontWeight.Bold,
+                    )
 
-                Text(
-                    text = "メモ",
-                    fontSize = 20.sp,
-                    color = Orange,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .padding(top = 30.dp)
-                        .padding(bottom = 4.dp)
-                )
+                    recipe.ingredients.forEach { ingredient ->
 
-                Text(
-                    text = recipe.memo,
-                    fontSize = 16.sp,
-                    modifier = Modifier.padding(bottom = 20.dp)
-                )
+                        Text(
+                            text = "・$ingredient",
+                            fontSize = 16.sp,
+                            modifier = Modifier.padding(bottom = 4.dp)
+                        )
 
-                if (recipe.imageUri.isNotBlank()) {
-                    AsyncImage(
-                        model = recipe.imageUri,
-                        contentDescription = recipe.name,
+                    }
+
+                    Text(
+                        text = "手順",
+                        fontSize = 20.sp,
+                        color = Orange,
+                        fontWeight = FontWeight.Bold,
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp)
-                            .clip(RoundedCornerShape(8.dp)),
-                        contentScale = ContentScale.FillBounds
+                            .padding(top = 20.dp)
+                            .padding(bottom = 4.dp)
+                    )
+                    recipe.steps.forEachIndexed { index, step ->
+
+                        Text(
+                            text = "${index + 1}. $step",
+                            fontSize = 16.sp,
+                            modifier = Modifier.padding(bottom = 4.dp)
+                        )
+
+                    }
+
+                    Text(
+                        text = "メモ",
+                        fontSize = 20.sp,
+                        color = Orange,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                            .padding(top = 30.dp)
+                            .padding(bottom = 4.dp)
                     )
 
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Text(
+                        text = recipe.memo,
+                        fontSize = 16.sp,
+                        modifier = Modifier.padding(bottom = 20.dp)
+                    )
+
+                    if (recipe.imageUri.isNotBlank()) {
+                        AsyncImage(
+                            model = recipe.imageUri,
+                            contentDescription = recipe.name,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp)
+                                .clip(RoundedCornerShape(8.dp)),
+                            contentScale = ContentScale.FillBounds
+                        )
+
+                        Spacer(modifier = Modifier.height(20.dp))
+                    }
+                } else {
+
+                    Text(
+                        text = "読み込み中..."
+                    )
+
                 }
+            }
+        }
 
-                Row {
-                    RecipeButton(
-                        text = "編集",
-                        onClick = {
-                            //編集画面へ
-                            navController.navigate(
-                                "edit_recipe/${recipe.id}"
-                            )
-                        }
-                    )
-
-                    Spacer(modifier = Modifier.width(4.dp))
-
-
-                    RecipeButton(
-                        text = "削除",
-                        onClick = {
-                            showDeleteDialog = true
-                        },
-                        containerColor = Red,
-                        contentColor = White
-                    )
-                }
-
-            } else {
-
-                Text(
-                    text = "読み込み中..."
+        if (recipe != null) {
+            Row(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                RecipeButton(
+                    text = "編集",
+                    onClick = {
+                        navController.navigate(
+                            "edit_recipe/${recipe.id}"
+                        )
+                    }
                 )
 
+                Spacer(modifier = Modifier.width(4.dp))
+
+                RecipeButton(
+                    text = "戻る",
+                    onClick = {
+                        navController.popBackStack()
+                    },
+                    containerColor = Red,
+                    contentColor = White
+                )
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                RecipeButton(
+                    text = "削除",
+                    onClick = {
+                        showDeleteDialog = true
+                    },
+                    containerColor = Red,
+                    contentColor = White
+                )
             }
         }
     }
+
     if (showDeleteDialog) {
         CommonDialog(
             title = "削除の確認",

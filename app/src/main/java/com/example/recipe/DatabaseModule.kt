@@ -13,7 +13,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
 
-    //この関数でオブジェクトを作る宣言(DB)
+    //この関数でオブジェクトを作る宣言(全DB)
     @Provides
     @Singleton
     fun provideDatabase(
@@ -23,12 +23,21 @@ object DatabaseModule {
         return RecipeDatabase.create(context)
     }
 
-    //この関数でオブジェクトを作る宣言(DB操作)
+    //この関数でオブジェクトを作る宣言(レシピDB操作)
     @Provides
     @Singleton
     fun provideRecipeDao(
         database: RecipeDatabase
     ): RecipeDao {
         return database.recipeDao()
+    }
+
+    // この関数でオブジェクトを作る宣言(食事記録DB操作)
+    @Provides
+    @Singleton
+    fun provideMealRecordDao(
+        database: RecipeDatabase
+    ): MealRecordDao {
+        return database.mealRecordDao()
     }
 }

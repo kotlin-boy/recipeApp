@@ -6,9 +6,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -85,9 +82,6 @@ fun AddRecipeScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(16.dp)
-                .verticalScroll(
-                    rememberScrollState()
-                )
                 .clickable {
                     focusManager.clearFocus()
                 }
@@ -102,6 +96,7 @@ fun AddRecipeScreen(
 
             //レシピ用コンポーズ
             RecipeForm(
+                modifier = Modifier.weight(1f),
                 //レシピ名の状態変数とイベント関数を渡す
                 recipeName = viewModel.recipeName,
                 onRecipeNameChange = viewModel::updateRecipeName,

@@ -6,8 +6,11 @@ import javax.inject.Singleton
 
 @Singleton
 class RecipeRepository @Inject constructor(
-    private val recipeDao: RecipeDao
+    private val recipeDao: RecipeDao,
+    private val mealRecordDao: MealRecordDao
 ) {
+
+    //レシピ管理用//////////////////////////////
     suspend fun insert(recipe: Recipe) {
         recipeDao.insert(recipe)
     }
@@ -72,5 +75,30 @@ class RecipeRepository @Inject constructor(
     //一括お気に入り更新
     suspend fun updateRecipes(recipes: List<Recipe>) {
         recipeDao.updateRecipes(recipes)
+    }
+
+
+    //食事管理用///////////////////////////
+
+    //食事記録追加
+    suspend fun insertMealRecord(mealRecord: MealRecord) {
+        mealRecordDao.insert(mealRecord)
+    }
+
+    //指定日の食事記録取得
+    fun getMealRecordsByDate(date: String): Flow<List<MealRecord>> {
+        return mealRecordDao.getMealRecordsByDate(date)
+    }
+
+    //食事記録削除
+    suspend fun deleteMealRecord(mealRecord: MealRecord) {
+        mealRecordDao.delete(mealRecord)
+    }
+
+    //指定日に食べたレシピ情報を取得
+    fun getMealRecordsWithRecipeByDate(
+        date: String
+    ): Flow<List<MealRecordWithRecipe>> {
+        return mealRecordDao.getMealRecordsWithRecipeByDate(date)
     }
 }

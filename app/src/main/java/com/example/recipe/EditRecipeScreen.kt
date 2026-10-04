@@ -77,9 +77,6 @@ fun EditRecipeScreen(
             .fillMaxSize()
             .safeDrawingPadding()
             .padding(16.dp)
-            .verticalScroll(
-                rememberScrollState()
-            )
             .clickable {
                 focusManager.clearFocus()
             }
@@ -96,6 +93,7 @@ fun EditRecipeScreen(
 
         //レシピ用コンポーズ
         RecipeForm(
+            modifier = Modifier.weight(1f),
             //レシピ名の状態変数とイベント関数を渡す
             recipeName = viewModel.recipeName,
             onRecipeNameChange = viewModel::updateRecipeName,

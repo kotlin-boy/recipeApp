@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.kinomaru.recipenote"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 36
         versionCode = 3
         versionName = "1.2"

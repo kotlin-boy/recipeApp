@@ -68,7 +68,7 @@ fun RecipeViewScreen(
         }
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.weight(1f)
         ){
             items(
                 items = recipes,
@@ -92,6 +92,18 @@ fun RecipeViewScreen(
                     )
             }
         }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        RecipeButton(
+            text = "戻る",
+            onClick = {
+                navController.popBackStack()
+            },
+            modifier = Modifier.fillMaxWidth(),
+            containerColor = Red,
+            contentColor = White,
+        )
 
         //削除ダイアログ
         if (showDeleteDialog) {
