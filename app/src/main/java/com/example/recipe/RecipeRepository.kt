@@ -101,4 +101,11 @@ class RecipeRepository @Inject constructor(
     ): Flow<List<MealRecordWithRecipe>> {
         return mealRecordDao.getMealRecordsWithRecipeByDate(date)
     }
+
+    //月単位食事記録取得
+    fun getMealRecordsWithRecipeByMonth(
+        yearMonth: String
+    ): Flow<List<MealRecordWithRecipe>> {
+        return mealRecordDao.getMealRecordsWithRecipeByMonth(yearMonth)
+    }
 }

@@ -26,6 +26,7 @@ interface MealRecordDao {
     @Delete
     suspend fun delete(mealRecord: MealRecord)
 
+    //レシピIDでの内部結合
     @Query(
         """
     SELECT
@@ -41,5 +42,24 @@ interface MealRecordDao {
     )
     fun getMealRecordsWithRecipeByDate(
         date: String
+    ): Flow<List<MealRecordWithRecipe>>
+
+    //月単位食事記録取得
+    @Query(
+        """
+    SELECT
+        meal_records.id AS mealRecordId,
+        meal_records.recipeId AS recipeId,
+        meal_records.date AS date,
+        Recipe.name AS recipeName
+    FROM meal_records
+    INNER JOIN Recipe
+        ON meal_records.recipeId = Recipe.id
+    WHERE meal_records.date LIKE :yearMonth || '%'
+    ORDER BY meal_records.date ASC
+    """
+    )
+    fun getMealRecordsWithRecipeByMonth(
+        yearMonth: String
     ): Flow<List<MealRecordWithRecipe>>
 }

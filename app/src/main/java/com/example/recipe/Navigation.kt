@@ -24,6 +24,14 @@ fun AppNavigation() {
         }
 
         composable(
+            route = Screen.CALENDAR.route
+        ) {
+            CalendarScreen(
+                navController = navController
+            )
+        }
+
+        composable(
             route = Screen.ADD_RECIPE.route
         ) {
             AddRecipeScreen(
@@ -38,6 +46,7 @@ fun AppNavigation() {
                 navController = navController
             )
         }
+
 
         composable(
             route = "recipe_detail/{recipeId}"

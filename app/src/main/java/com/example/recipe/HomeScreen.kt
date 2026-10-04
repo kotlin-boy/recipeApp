@@ -18,11 +18,20 @@ import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.HorizontalDivider
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 
 @Composable
 fun HomeScreen(
-    navController: NavController
+    navController: NavController,
+    calendarViewModel: CalendarViewModel = hiltViewModel()
 ) {
+
+    val currentMonth by calendarViewModel.currentMonth.collectAsState()
+    val selectedDate by calendarViewModel.selectedDate.collectAsState()
+    val monthMealRecords by calendarViewModel.monthMealRecords.collectAsState()
 
     Column(
         modifier = Modifier
@@ -38,7 +47,7 @@ fun HomeScreen(
             modifier = Modifier.padding(top = 16.dp)
         )
 
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         Button(
             onClick = {
@@ -77,13 +86,25 @@ fun HomeScreen(
             shape = RoundedCornerShape(10.dp),
         ) {
             Text(
-                "レシピ閲覧",
+                "レシピ一覧",
                 fontSize = 22.sp,
                 modifier = Modifier.padding(vertical = 8.dp),
                 fontWeight = FontWeight.Bold
             )
         }
 
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.height(20.dp))
+
+        RecipeCalendar(
+            currentMonth = currentMonth,
+            selectedDate = selectedDate,
+            monthMealRecords = monthMealRecords,
+            onPreviousMonth = calendarViewModel::previousMonth,
+            onNextMonth = calendarViewModel::nextMonth,
+            onDateClick = {
+                calendarViewModel.selectDate(it)
+                navController.navigate(Screen.CALENDAR.route)
+            }
+        )
     }
 }
