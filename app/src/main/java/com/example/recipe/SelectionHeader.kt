@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 
 @Composable
 fun SelectionHeader(
@@ -50,7 +51,8 @@ fun SelectionHeader(
         ) {
             Icon(
                 imageVector = Icons.Default.Star,
-                contentDescription = "お気に入り追加"
+                contentDescription = "お気に入り",
+                tint = Yellow
             )
         }
 
@@ -68,7 +70,8 @@ fun SelectionHeader(
         ) {
             Icon(
                 imageVector = Icons.Default.Delete,
-                contentDescription = "削除"
+                contentDescription = "削除",
+                tint = Red
             )
         }
     }

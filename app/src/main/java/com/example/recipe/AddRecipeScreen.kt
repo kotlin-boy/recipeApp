@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import android.net.Uri
+import android.content.Intent
 
 @Composable
 fun AddRecipeScreen(
@@ -41,9 +42,14 @@ fun AddRecipeScreen(
 
     //画像選択用
     val imagePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
+        contract = ActivityResultContracts.OpenDocument()
     ) { uri ->
         uri?.let {
+            context.contentResolver.takePersistableUriPermission(
+                it,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
+
             viewModel.updateImageUri(it.toString())
         }
     }
@@ -86,16 +92,10 @@ fun AddRecipeScreen(
                     focusManager.clearFocus()
                 }
         ) {
-            Text(
-                text = "レシピ追加",
-                fontSize = 26.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black,
-                modifier = Modifier.padding(bottom = 6.dp)
-            )
 
             //レシピ用コンポーズ
             RecipeForm(
+                title = "レシピ追加",
                 modifier = Modifier.weight(1f),
                 //レシピ名の状態変数とイベント関数を渡す
                 recipeName = viewModel.recipeName,
@@ -137,7 +137,9 @@ fun AddRecipeScreen(
                 },
                 hasChanges = viewModel.hasChanges(),
                 onImageSelectClick = {
-                    imagePickerLauncher.launch("image/*")
+                    imagePickerLauncher.launch(
+                        arrayOf("image/*")
+                    )
                 },
                 onTakePhotoClick = {
                     cameraImageUri = ImageUtils.createImageUri(context)

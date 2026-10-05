@@ -78,7 +78,7 @@ fun RecipeCard(
 
                     Text(
                         text = recipe.name,
-                        maxLines = 2,
+                        maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
                 }

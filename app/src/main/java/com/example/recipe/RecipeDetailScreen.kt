@@ -1,7 +1,6 @@
 package com.example.recipe
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.AlertDialog
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,7 +29,22 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarBorder
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.DatePicker
+import java.time.Instant
+import java.time.ZoneId
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.TextButton
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecipeDetailScreen(
     navController: NavController,
@@ -45,6 +58,12 @@ fun RecipeDetailScreen(
     }
 
     val scope = rememberCoroutineScope()
+
+    //カレンダーダイアログ
+    var showCalendarDialog by remember {
+        mutableStateOf(false)
+    }
+
 
     //開幕で指定レシピ取得
     LaunchedEffect(recipeId) {
@@ -69,18 +88,41 @@ fun RecipeDetailScreen(
 
                     val recipe = viewModel.recipe!!
 
-                    Text(
-                        text = "レシピ名（${recipe.genre.displayName}）",
-                        fontSize = 26.sp,
-                        color = Orange,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(bottom = 4.dp)
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "レシピ名（${recipe.genre.displayName}）",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Orange,
+                        )
 
+                        Spacer(modifier = Modifier.weight(1f))
+
+                        IconButton(
+                            onClick = viewModel::toggleFavorite
+                        ) {
+                            Icon(
+                                imageVector =
+                                    if (recipe.isFavorite)
+                                        Icons.Default.Star
+                                    else
+                                        Icons.Default.StarBorder,
+                                contentDescription = "お気に入り",
+                                tint =
+                                    if (recipe.isFavorite)
+                                        Yellow
+                                    else
+                                        Color.Black
+                            )
+                        }
+                    }
 
                     Text(
                         text = recipe.name,
-                        fontSize = 20.sp,
+                        fontSize = 26.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(bottom = 20.dp)
                     )
@@ -177,6 +219,15 @@ fun RecipeDetailScreen(
                 Spacer(modifier = Modifier.width(4.dp))
 
                 RecipeButton(
+                    text = "食事記録登録",
+                    onClick = {
+                        showCalendarDialog = true
+                    },
+                )
+
+                Spacer(modifier = Modifier.width(4.dp))
+
+                RecipeButton(
                     text = "戻る",
                     onClick = {
                         navController.popBackStack()
@@ -236,5 +287,49 @@ fun RecipeDetailScreen(
                 )
             }
         )
+    }
+
+    if (showCalendarDialog) {
+        val datePickerState = rememberDatePickerState(
+            initialSelectedDateMillis = System.currentTimeMillis()
+        )
+
+        DatePickerDialog(
+            onDismissRequest = {
+                showCalendarDialog = false
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        datePickerState.selectedDateMillis?.let { millis ->
+                            val date = Instant
+                                .ofEpochMilli(millis)
+                                .atZone(ZoneId.systemDefault())
+                                .toLocalDate()
+                                .toString()
+
+                            viewModel.addMealRecord(date)
+                        }
+
+                        showCalendarDialog = false
+                    }
+                ) {
+                    Text("登録")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        showCalendarDialog = false
+                    }
+                ) {
+                    Text("キャンセル")
+                }
+            }
+        ) {
+            DatePicker(
+                state = datePickerState
+            )
+        }
     }
 }

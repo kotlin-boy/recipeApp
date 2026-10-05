@@ -37,7 +37,7 @@ fun NormalHeader(
     favoriteOnly: Boolean,
     onFavoriteClick: () -> Unit,
     showImage: Boolean,
-    onShowImageClick: () -> Unit
+    onShowImageClick: () -> Unit,
 ) {
     var genreExpanded by remember { mutableStateOf(false) }
     var sortExpanded by remember { mutableStateOf(false) }
@@ -122,7 +122,12 @@ fun NormalHeader(
                         Icons.Default.Star
                     else
                         Icons.Default.StarBorder,
-                contentDescription = "お気に入り"
+                contentDescription = "お気に入り",
+                tint =
+                    if (favoriteOnly)
+                        Yellow
+                    else
+                        Color.Black
             )
         }
 

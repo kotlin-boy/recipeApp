@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.foundation.lazy.grid.items
+import androidx.activity.compose.BackHandler
 
 @Composable
 fun RecipeViewScreen(
@@ -31,6 +32,10 @@ fun RecipeViewScreen(
 
     //flow
     val recipes by viewModel.recipes.collectAsState()
+
+    BackHandler(enabled = viewModel.isSelectionMode) {
+        viewModel.exitSelectionMode()
+    }
 
     //削除ダイアログ
     var showDeleteDialog by remember { mutableStateOf(false) }
@@ -63,7 +68,7 @@ fun RecipeViewScreen(
                 favoriteOnly = viewModel.favoriteOnly,
                 onFavoriteClick = viewModel::toggleFavoriteFilter,
                 showImage = viewModel.showImage,
-                onShowImageClick = viewModel::toggleShowImage
+                onShowImageClick = viewModel::toggleShowImage,
             )
         }
         LazyVerticalGrid(
@@ -93,17 +98,18 @@ fun RecipeViewScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
-
-        RecipeButton(
-            text = "戻る",
-            onClick = {
-                navController.popBackStack()
-            },
-            modifier = Modifier.fillMaxWidth(),
-            containerColor = Red,
-            contentColor = White,
-        )
+        if (!viewModel.isSelectionMode) {
+            Spacer(modifier = Modifier.height(8.dp))
+            RecipeButton(
+                text = "戻る",
+                onClick = {
+                    navController.popBackStack()
+                },
+                modifier = Modifier.fillMaxWidth(),
+                containerColor = Red,
+                contentColor = White,
+            )
+        }
 
         //削除ダイアログ
         if (showDeleteDialog) {

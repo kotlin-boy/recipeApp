@@ -27,4 +27,32 @@ class RecipeDatailViewModel @Inject constructor(
         val recipe = recipe ?: return
         repository.delete(recipe)
     }
+
+    fun addMealRecord(date: String) {
+        val currentRecipe = recipe ?: return
+
+        viewModelScope.launch {
+            repository.insertMealRecord(
+                MealRecord(
+                    recipeId = currentRecipe.id,
+                    date = date
+                )
+            )
+        }
+    }
+
+    fun toggleFavorite() {
+        val currentRecipe = recipe ?: return
+
+        viewModelScope.launch {
+            repository.updateFavorite(
+                currentRecipe.id,
+                !currentRecipe.isFavorite
+            )
+
+            recipe = currentRecipe.copy(
+                isFavorite = !currentRecipe.isFavorite
+            )
+        }
+    }
 }

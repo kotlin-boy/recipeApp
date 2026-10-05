@@ -82,17 +82,9 @@ fun EditRecipeScreen(
             }
     ) {
 
-
-        Text(
-            text = "レシピ編集",
-            fontSize = 26.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black,
-            modifier = Modifier.padding(bottom = 6.dp)
-        )
-
         //レシピ用コンポーズ
         RecipeForm(
+            title = "レシピ編集",
             modifier = Modifier.weight(1f),
             //レシピ名の状態変数とイベント関数を渡す
             recipeName = viewModel.recipeName,

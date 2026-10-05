@@ -35,9 +35,12 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.text.SpanStyle
 import androidx.activity.compose.BackHandler
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 
 @Composable
 fun RecipeForm(
+    title: String,
     recipeName: String,
     onRecipeNameChange: (String) -> Unit,
     expanded: Boolean,
@@ -91,6 +94,40 @@ fun RecipeForm(
     Column(
         modifier = modifier
     ) {
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = title,
+                fontSize = 26.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            IconButton(
+                onClick = onFavoriteChange
+            ) {
+                Icon(
+                    imageVector =
+                        if (isFavorite)
+                            Icons.Default.Star
+                        else
+                            Icons.Default.StarBorder,
+                    contentDescription = "お気に入り",
+                    tint =
+                        if (isFavorite)
+                            Yellow
+                        else
+                            Color.Black
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(6.dp))
+
         LazyColumn(
             modifier = Modifier.weight(1f)
         ) {
@@ -301,19 +338,6 @@ fun RecipeForm(
             Spacer(
                 modifier = Modifier.weight(1f)
             )
-
-            IconButton(
-                onClick = onFavoriteChange
-            ) {
-                Icon(
-                    imageVector =
-                        if (isFavorite)
-                            Icons.Default.Star
-                        else
-                            Icons.Default.StarBorder,
-                    contentDescription = "お気に入り"
-                )
-            }
         }
 
     }
