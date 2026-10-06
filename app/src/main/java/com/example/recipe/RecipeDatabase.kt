@@ -5,6 +5,9 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
+
 
 @Database(
     entities = [
@@ -24,6 +27,31 @@ abstract class RecipeDatabase : RoomDatabase() {
 
     companion object {
 
+        val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+
+                db.execSQL(
+                    """
+                CREATE TABLE IF NOT EXISTS `meal_records` (
+                    `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                    `recipeId` INTEGER NOT NULL,
+                    `date` TEXT NOT NULL,
+                    FOREIGN KEY(`recipeId`) REFERENCES `Recipe`(`id`)
+                        ON UPDATE NO ACTION
+                        ON DELETE CASCADE
+                )
+                """.trimIndent()
+                )
+
+                db.execSQL(
+                    """
+                CREATE INDEX IF NOT EXISTS `index_meal_records_recipeId`
+                ON `meal_records` (`recipeId`)
+                """.trimIndent()
+                )
+            }
+        }
+
         fun create(
             context: Context
         ): RecipeDatabase {
@@ -32,8 +60,12 @@ abstract class RecipeDatabase : RoomDatabase() {
                 context,
                 RecipeDatabase::class.java,
                 "recipe_database"
-            ).fallbackToDestructiveMigration().build()
+            )
+                .addMigrations(MIGRATION_3_4)
+                .build()
         }
     }
 }
+
+
 
