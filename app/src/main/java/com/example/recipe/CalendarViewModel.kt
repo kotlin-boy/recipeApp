@@ -182,4 +182,11 @@ class CalendarViewModel @Inject constructor(
         }
     }
 
+    //食事記録を削除
+    fun deleteMealRecord(mealRecordId: Int) {
+        viewModelScope.launch {
+            repository.deleteMealRecordById(mealRecordId)
+        }
+    }
+
 }

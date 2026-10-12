@@ -62,4 +62,13 @@ interface MealRecordDao {
     fun getMealRecordsWithRecipeByMonth(
         yearMonth: String
     ): Flow<List<MealRecordWithRecipe>>
+
+    //指定IDの食事記録を削除
+    @Query(
+        """
+    DELETE FROM meal_records
+    WHERE id = :id
+    """
+    )
+    suspend fun deleteMealRecordById(id: Int)
 }

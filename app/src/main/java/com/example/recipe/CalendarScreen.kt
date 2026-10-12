@@ -41,7 +41,12 @@ import java.time.DayOfWeek
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.SegmentedButtonDefaults.Icon
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 
 @Composable
 fun CalendarScreen(
@@ -82,6 +87,11 @@ fun CalendarScreen(
     //レシピ登録用ダイアログ
     var showRecipeDialog by remember {
         mutableStateOf(false)
+    }
+
+    //削除対象の食事記録
+    var deleteTarget by remember {
+        mutableStateOf<MealRecordWithRecipe?>(null)
     }
 
     Scaffold(
@@ -150,12 +160,30 @@ fun CalendarScreen(
                     .weight(1f)
             ) {
                 itemsIndexed(mealRecords) { _, mealRecord ->
-                    Text(
-                        text = "・${mealRecord.recipeName}",
-                        fontSize = 26.sp,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "・${mealRecord.recipeName}",
+                            fontSize = 26.sp,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.weight(1f)
+                        )
+
+                        IconButton(
+                            onClick = {
+                                deleteTarget = mealRecord
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = "食事記録を削除",
+                                tint = Red
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -223,6 +251,49 @@ fun CalendarScreen(
                     containerColor = Red,
                     contentColor = White
                 )
+            }
+        )
+    }
+
+    //食事記録削除確認ダイアログ
+    deleteTarget?.let { mealRecord ->
+        CommonDialog(
+            title = "食事記録の削除",
+            onDismissRequest = {
+                deleteTarget = null
+            },
+            buttons = {
+                Text(
+                    text = "「${mealRecord.recipeName}」の食事記録を削除しますか？"
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    RecipeButton(
+                        text = "キャンセル",
+                        onClick = {
+                            deleteTarget = null
+                        },
+                        modifier = Modifier.weight(1f)
+                    )
+
+                    RecipeButton(
+                        text = "削除",
+                        onClick = {
+                            viewModel.deleteMealRecord(
+                                mealRecord.mealRecordId
+                            )
+                            deleteTarget = null
+                        },
+                        modifier = Modifier.weight(1f),
+                        containerColor = Red,
+                        contentColor = White
+                    )
+                }
             }
         )
     }
